@@ -71,11 +71,7 @@ export default function Home() {
       setFlashcards(data.flashcards);
       setVideoId(data.videoId ?? "");
       setStatus("success");
-
-      // Auto-scroll down smoothly to the study flashcards
-      setTimeout(() => {
-        document.getElementById("flashcards-results")?.scrollIntoView({ behavior: "smooth" });
-      }, 150);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
       setError("Network error — please check your connection and try again.");
       setStatus("error");
@@ -90,39 +86,41 @@ export default function Home() {
     setStatus("idle");
     setFlashcards([]);
     setVideoId("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <div className="min-h-screen" style={{ background: "var(--clr-bg)" }}>
-      <Navbar />
-      <HeroSection
-        url={url}
-        setUrl={setUrl}
-        error={error}
-        setError={setError}
-        isLoading={isLoading}
-        status={status}
-        mode={mode}
-        setMode={setMode}
-        flashcardCount={flashcards.length}
-        onGenerate={handleGenerate}
-        onReset={handleReset}
-      />
-      {status === "success" && flashcards.length > 0 && (
+      {/* ── SCREEN 2: TWO-COLUMN STUDY STUDIO (REPLACES SCREEN 1 ONCE GENERATED) ── */}
+      {status === "success" && flashcards.length > 0 ? (
         <FlashcardsSection
           flashcards={flashcards}
           videoId={videoId}
           mode={mode}
           onReset={handleReset}
         />
-      )}
-      {status !== "success" && (
+      ) : (
+        /* ── SCREEN 1: ADD VIDEO URL & SELECT STUDY TYPE ── */
         <>
+          <Navbar />
+          <HeroSection
+            url={url}
+            setUrl={setUrl}
+            error={error}
+            setError={setError}
+            isLoading={isLoading}
+            status={status}
+            mode={mode}
+            setMode={setMode}
+            flashcardCount={flashcards.length}
+            onGenerate={handleGenerate}
+            onReset={handleReset}
+          />
           <FeaturesSection />
           <HowItWorksSection />
+          <Footer />
         </>
       )}
-      <Footer />
     </div>
   );
 }

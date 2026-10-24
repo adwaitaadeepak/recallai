@@ -111,118 +111,148 @@ export default function FlashcardsSection({
   const externalVideoUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : "#";
 
   return (
-    <section
-      id="flashcards-results"
-      aria-labelledby="flashcards-headline"
+    <div
+      id="screen-2-studio"
+      className="min-h-screen flex flex-col"
       style={{
         background: "linear-gradient(180deg, #f8f9fc 0%, #eef2ff 100%)",
-        padding: "56px 20px 88px",
       }}
     >
-      <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-        {/* ── Top Navigation / Mode Bar ── */}
-        <div
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-          style={{ marginBottom: 32 }}
-        >
-          <div>
-            <div className="flex items-center gap-2" style={{ marginBottom: 6 }}>
-              <span
-                className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full"
-                style={{
-                  background: "#eef2ff",
-                  border: "1px solid #c7d2fe",
-                  color: "#4f46e5",
-                  padding: "4px 12px",
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {mode === "intensive" ? "🧠 Intensive Study" : "⚡ Basic Study"}
-              </span>
-              <span style={{ fontSize: "0.8125rem", color: "#6b7280" }}>
-                {cards.length} cards generated
-              </span>
-            </div>
-            <h2
-              id="flashcards-headline"
-              style={{
-                fontFamily: "'Space Grotesk', sans-serif",
-                fontSize: "clamp(1.5rem, 3.5vw, 2.15rem)",
-                fontWeight: 700,
-                color: "#111827",
-                lineHeight: 1.25,
-              }}
-            >
-              Stage 3: Study & Revise
-            </h2>
-          </div>
-
-          {/* Action pills */}
-          <div className="flex items-center gap-2.5">
-            {/* View switcher */}
+      {/* ── SCREEN 2 TOP STUDIO NAVBAR ── */}
+      <header
+        style={{
+          background: "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(8px)",
+          borderBottom: "1px solid #e5e7eb",
+          padding: "0 24px",
+          height: 64,
+          position: "sticky",
+          top: 0,
+          zIndex: 40,
+          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+        }}
+        className="flex items-center justify-between"
+      >
+        {/* Left: Logo & Back Button */}
+        <div className="flex items-center gap-3">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={onReset}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onReset(); }}
+            className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-85"
+            title="Return to setup"
+          >
             <div
-              className="inline-flex items-center rounded-xl p-1"
-              style={{ background: "#ffffff", border: "1px solid #e5e7eb" }}
+              className="flex items-center justify-center rounded-lg"
+              style={{ width: 32, height: 32, background: "#4f46e5" }}
             >
-              <button
-                type="button"
-                onClick={() => setViewMode("focus")}
-                className="text-xs font-semibold rounded-lg transition-all"
-                style={{
-                  padding: "6px 14px",
-                  background: viewMode === "focus" ? "#4f46e5" : "transparent",
-                  color: viewMode === "focus" ? "#ffffff" : "#4b5563",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                Focus Mode
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("grid")}
-                className="text-xs font-semibold rounded-lg transition-all"
-                style={{
-                  padding: "6px 14px",
-                  background: viewMode === "grid" ? "#4f46e5" : "transparent",
-                  color: viewMode === "grid" ? "#ffffff" : "#4b5563",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                Grid View
-              </button>
-            </div>
-
-            {/* Reset / New Video */}
-            <button
-              type="button"
-              onClick={onReset}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-xl transition-all"
-              style={{
-                background: "#ffffff",
-                border: "1px solid #e5e7eb",
-                color: "#374151",
-                padding: "8px 16px",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#9ca3af";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "#e5e7eb";
-              }}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                <path d="M3 3v5h5" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
               </svg>
-              New Video
-            </button>
+            </div>
+            <span
+              className="text-base font-bold tracking-tight"
+              style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#111827" }}
+            >
+              Recall<span style={{ color: "#4f46e5" }}>AI</span>
+            </span>
           </div>
+
+          <span className="hidden sm:inline" style={{ color: "#d1d5db" }}>|</span>
+
+          {/* Mode Pill */}
+          <span
+            className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full"
+            style={{
+              background: "#eef2ff",
+              border: "1px solid #c7d2fe",
+              color: "#4f46e5",
+              padding: "4px 12px",
+            }}
+          >
+            {mode === "intensive" ? "🧠 Intensive Study" : "⚡ Basic Study"} • {cards.length} cards
+          </span>
         </div>
 
+        {/* Right: View Switcher & Change Video Button */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* View switcher */}
+          <div
+            className="inline-flex items-center rounded-xl p-1"
+            style={{ background: "#f3f4f6", border: "1px solid #e5e7eb" }}
+          >
+            <button
+              type="button"
+              onClick={() => setViewMode("focus")}
+              className="text-xs font-semibold rounded-lg transition-all cursor-pointer"
+              style={{
+                padding: "5px 12px",
+                background: viewMode === "focus" ? "#ffffff" : "transparent",
+                color: viewMode === "focus" ? "#111827" : "#6b7280",
+                border: "none",
+                boxShadow: viewMode === "focus" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+              }}
+            >
+              Focus
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              className="text-xs font-semibold rounded-lg transition-all cursor-pointer"
+              style={{
+                padding: "5px 12px",
+                background: viewMode === "grid" ? "#ffffff" : "transparent",
+                color: viewMode === "grid" ? "#111827" : "#6b7280",
+                border: "none",
+                boxShadow: viewMode === "grid" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+              }}
+            >
+              Grid
+            </button>
+          </div>
+
+          {/* Return to Screen 1 button */}
+          <button
+            id="return-to-setup-btn"
+            type="button"
+            onClick={onReset}
+            className="inline-flex items-center gap-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer"
+            style={{
+              background: "#ffffff",
+              border: "1.5px solid #d1d5db",
+              color: "#374151",
+              padding: "7px 14px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#4f46e5";
+              e.currentTarget.style.color = "#4f46e5";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#d1d5db";
+              e.currentTarget.style.color = "#374151";
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            <span className="hidden sm:inline">Change Video</span>
+            <span className="sm:hidden">Exit</span>
+          </button>
+        </div>
+      </header>
+
+      {/* ── MAIN STUDIO CONTENT (TWO COLUMNS) ── */}
+      <main
+        style={{
+          flex: 1,
+          maxWidth: 1280,
+          margin: "0 auto",
+          width: "100%",
+          padding: "32px 20px 64px",
+        }}
+      >
         {/* ── TWO-COLUMN STUDY LAYOUT ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* ── LEFT COLUMN: YouTube Video Player ── */}
@@ -794,7 +824,7 @@ export default function FlashcardsSection({
             )}
           </div>
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
   );
 }
