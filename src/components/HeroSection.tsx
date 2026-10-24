@@ -10,6 +10,7 @@ interface HeroSectionProps {
   setError: Dispatch<SetStateAction<string>>;
   isLoading: boolean;
   status: GenerateStatus;
+  flashcardCount?: number;
   onGenerate: () => void;
   onReset: () => void;
 }
@@ -21,6 +22,7 @@ export default function HeroSection({
   setError,
   isLoading,
   status,
+  flashcardCount = 0,
   onGenerate,
   onReset,
 }: HeroSectionProps) {
@@ -243,6 +245,53 @@ export default function HeroSection({
             </p>
           )}
 
+          {/* Success banner */}
+          {status === "success" && (
+            <div
+              role="status"
+              className="fade-up flex items-center justify-between rounded-lg"
+              style={{
+                background: "#ecfdf5",
+                border: "1px solid #a7f3d0",
+                color: "#065f46",
+                padding: "10px 14px",
+                fontSize: "0.875rem",
+                marginTop: 10,
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                <span className="font-semibold">
+                  {flashcardCount ? `${flashcardCount} flashcards generated!` : "Flashcards generated!"}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => document.getElementById("flashcards-results")?.scrollIntoView({ behavior: "smooth" })}
+                className="font-semibold underline underline-offset-2 transition-opacity"
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#047857",
+                  padding: "4px 8px",
+                }}
+              >
+                View Flashcards ↓
+              </button>
+            </div>
+          )}
+
+          {/* Loading state */}
+          {status === "loading" && (
+            <p style={{ fontSize: "0.8125rem", color: "#6b7280", marginTop: 8 }}>
+              Fetching transcript and generating flashcards…
+            </p>
+          )}
+
           {/* Error message */}
           {status === "error" && error && (
             <div
@@ -264,44 +313,6 @@ export default function HeroSection({
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
               {error}
-            </div>
-          )}
-
-          {/* Not-yet-implemented notice */}
-          {status === "not_ready" && (
-            <div
-              role="status"
-              aria-live="polite"
-              className="fade-up flex items-start gap-3 rounded-lg"
-              style={{
-                background: "#eef2ff",
-                border: "1px solid #c7d2fe",
-                color: "#3730a3",
-                padding: "12px 16px",
-                fontSize: "0.875rem",
-                marginTop: 10,
-              }}
-            >
-              <svg className="shrink-0 mt-px" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4M12 8h.01" />
-              </svg>
-              <div>
-                <p className="font-semibold" style={{ marginBottom: 3 }}>AI processing coming soon</p>
-                <p style={{ opacity: 0.85, lineHeight: 1.5 }}>
-                  Your URL looks valid! Transcript extraction and flashcard generation are not yet connected to a backend. Once the API is wired up, this will return real flashcards.
-                </p>
-                <button
-                  type="button"
-                  onClick={onReset}
-                  className="font-semibold underline underline-offset-2"
-                  style={{ background: "none", border: "none", cursor: "pointer", color: "#4f46e5", marginTop: 8, fontSize: "0.8125rem", padding: 0 }}
-                  onMouseEnter={e => (e.currentTarget.style.textDecoration = "none")}
-                  onMouseLeave={e => (e.currentTarget.style.textDecoration = "underline")}
-                >
-                  Try a different URL
-                </button>
-              </div>
             </div>
           )}
         </div>
