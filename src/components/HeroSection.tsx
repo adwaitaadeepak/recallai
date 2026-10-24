@@ -110,27 +110,14 @@ export default function HeroSection({
             padding: 28,
           }}
         >
-          {/* ── STAGE 1: ADD A VIDEO ── */}
-          <div className="flex items-center gap-2" style={{ marginBottom: 10 }}>
-            <span
-              className="inline-flex items-center justify-center font-bold text-xs rounded-full"
-              style={{
-                width: 22,
-                height: 22,
-                background: "#4f46e5",
-                color: "#ffffff",
-              }}
-            >
-              1
-            </span>
-            <label
-              htmlFor="youtube-url-input"
-              className="block text-sm font-bold uppercase tracking-wide"
-              style={{ color: "#374151" }}
-            >
-              Stage 1: Add a Video
-            </label>
-          </div>
+          {/* Input label */}
+          <label
+            htmlFor="youtube-url-input"
+            className="block text-sm font-semibold"
+            style={{ color: "#374151", marginBottom: 8 }}
+          >
+            YouTube video URL
+          </label>
 
           {/* URL input with YouTube icon */}
           <div className="relative" style={{ marginBottom: 16 }}>
@@ -214,25 +201,12 @@ export default function HeroSection({
             />
           </div>
 
-          {/* ── STAGE 2: CHOOSE HOW TO STUDY ── */}
-          <div style={{ marginBottom: 18, paddingTop: 6 }}>
-            <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
-              <div className="flex items-center gap-2">
-                <span
-                  className="inline-flex items-center justify-center font-bold text-xs rounded-full"
-                  style={{
-                    width: 22,
-                    height: 22,
-                    background: "#4f46e5",
-                    color: "#ffffff",
-                  }}
-                >
-                  2
-                </span>
-                <label className="block text-sm font-bold uppercase tracking-wide" style={{ color: "#374151" }}>
-                  Stage 2: Choose How to Study
-                </label>
-              </div>
+          {/* ── Study Mode Selector ── */}
+          <div style={{ marginBottom: 16 }}>
+            <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
+              <label className="block text-sm font-semibold" style={{ color: "#374151" }}>
+                Study Mode
+              </label>
               <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>
                 {mode === "basic" ? "⚡ Quick Revision (5–10 cards)" : "🧠 Deep Mastery (Dynamic, up to 40 cards)"}
               </span>
