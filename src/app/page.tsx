@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Flashcard } from "@/app/api/generate/route";
+import type { Flashcard, StudyMode } from "@/app/api/generate/route";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FlashcardsSection from "@/components/FlashcardsSection";
@@ -18,6 +18,7 @@ export type GenerateStatus =
 
 export default function Home() {
   const [url, setUrl] = useState("");
+  const [mode, setMode] = useState<StudyMode>("basic");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [status, setStatus] = useState<GenerateStatus>("idle");
@@ -56,7 +57,7 @@ export default function Home() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim() }),
+        body: JSON.stringify({ url: url.trim(), mode }),
       });
 
       const data = await res.json();
@@ -101,6 +102,8 @@ export default function Home() {
         setError={setError}
         isLoading={isLoading}
         status={status}
+        mode={mode}
+        setMode={setMode}
         flashcardCount={flashcards.length}
         onGenerate={handleGenerate}
         onReset={handleReset}
@@ -109,6 +112,7 @@ export default function Home() {
         <FlashcardsSection
           flashcards={flashcards}
           videoId={videoId}
+          mode={mode}
           onReset={handleReset}
         />
       )}

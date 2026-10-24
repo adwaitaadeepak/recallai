@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction, useRef } from "react";
 import type { GenerateStatus } from "@/app/page";
+import type { StudyMode } from "@/app/api/generate/route";
 
 interface HeroSectionProps {
   url: string;
@@ -10,6 +11,8 @@ interface HeroSectionProps {
   setError: Dispatch<SetStateAction<string>>;
   isLoading: boolean;
   status: GenerateStatus;
+  mode: StudyMode;
+  setMode: Dispatch<SetStateAction<StudyMode>>;
   flashcardCount?: number;
   onGenerate: () => void;
   onReset: () => void;
@@ -22,6 +25,8 @@ export default function HeroSection({
   setError,
   isLoading,
   status,
+  mode,
+  setMode,
   flashcardCount = 0,
   onGenerate,
   onReset,
@@ -105,144 +110,328 @@ export default function HeroSection({
             padding: 28,
           }}
         >
-          {/* Input label */}
-          <label
-            htmlFor="youtube-url-input"
-            className="block text-sm font-semibold"
-            style={{ color: "#374151", marginBottom: 8 }}
-          >
-            YouTube video URL
-          </label>
+          {/* ── STAGE 1: ADD A VIDEO ── */}
+          <div className="flex items-center gap-2" style={{ marginBottom: 10 }}>
+            <span
+              className="inline-flex items-center justify-center font-bold text-xs rounded-full"
+              style={{
+                width: 22,
+                height: 22,
+                background: "#4f46e5",
+                color: "#ffffff",
+              }}
+            >
+              1
+            </span>
+            <label
+              htmlFor="youtube-url-input"
+              className="block text-sm font-bold uppercase tracking-wide"
+              style={{ color: "#374151" }}
+            >
+              Stage 1: Add a Video
+            </label>
+          </div>
 
-          {/* Input + button row */}
-          <div className="flex flex-col sm:flex-row gap-3" style={{ marginBottom: 12 }}>
+          {/* URL input with YouTube icon */}
+          <div className="relative" style={{ marginBottom: 16 }}>
+            {/* YouTube icon */}
+            <span
+              className="absolute flex items-center pointer-events-none"
+              style={{ left: 14, top: "50%", transform: "translateY(-50%)" }}
+              aria-hidden="true"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <rect x="2" y="5" width="20" height="14" rx="3" fill="#FF0000" />
+                <polygon points="10,9 10,15 16,12" fill="white" />
+              </svg>
+            </span>
 
-            {/* URL input with YouTube icon */}
-            <div className="relative flex-1">
-              {/* YouTube icon */}
-              <span
-                className="absolute flex items-center pointer-events-none"
-                style={{ left: 12, top: "50%", transform: "translateY(-50%)" }}
-                aria-hidden="true"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <rect x="2" y="5" width="20" height="14" rx="3" fill="#FF0000" />
-                  <polygon points="10,9 10,15 16,12" fill="white" />
-                </svg>
-              </span>
-
-              {/* Clear button */}
-              {url && !isLoading && (
-                <button
-                  type="button"
-                  onClick={() => { setUrl(""); setError(""); inputRef.current?.focus(); }}
-                  aria-label="Clear URL"
-                  className="absolute flex items-center justify-center transition-colors"
-                  style={{
-                    right: 10,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    color: "#9ca3af",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: 4,
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#374151")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "#9ca3af")}
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </button>
-              )}
-
-              <input
-                ref={inputRef}
-                id="youtube-url-input"
-                type="url"
-                value={url}
-                onChange={(e) => { setUrl(e.target.value); if (error) setError(""); }}
-                onKeyDown={(e) => { if (e.key === "Enter" && !isLoading) onGenerate(); }}
-                placeholder="https://www.youtube.com/watch?v=…"
-                disabled={isLoading}
-                autoComplete="url"
-                spellCheck={false}
-                aria-label="YouTube video URL"
-                aria-invalid={!!error}
-                aria-describedby={error ? "url-error" : undefined}
+            {/* Clear button */}
+            {url && !isLoading && (
+              <button
+                type="button"
+                onClick={() => { setUrl(""); setError(""); inputRef.current?.focus(); }}
+                aria-label="Clear URL"
+                className="absolute flex items-center justify-center transition-colors"
                 style={{
-                  width: "100%",
-                  height: 48,
-                  paddingLeft: 44,
-                  paddingRight: url ? 36 : 14,
-                  paddingTop: 0,
-                  paddingBottom: 0,
-                  fontSize: "0.9375rem",
-                  color: "#111827",
-                  background: error ? "#fef2f2" : "#ffffff",
-                  border: `1.5px solid ${error ? "#fca5a5" : "#d1d5db"}`,
-                  borderRadius: 10,
-                  outline: "none",
-                  fontFamily: "'Inter', sans-serif",
-                  transition: "border-color 0.15s, box-shadow 0.15s",
+                  right: 12,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "#9ca3af",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 4,
                 }}
-                onFocus={e => {
-                  e.currentTarget.style.borderColor = "#4f46e5";
-                  e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,70,229,0.12)";
-                }}
-                onBlur={e => {
-                  e.currentTarget.style.borderColor = error ? "#fca5a5" : "#d1d5db";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-              />
+                onMouseEnter={e => (e.currentTarget.style.color = "#374151")}
+                onMouseLeave={e => (e.currentTarget.style.color = "#9ca3af")}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            )}
+
+            <input
+              ref={inputRef}
+              id="youtube-url-input"
+              type="url"
+              value={url}
+              onChange={(e) => { setUrl(e.target.value); if (error) setError(""); }}
+              onKeyDown={(e) => { if (e.key === "Enter" && !isLoading) onGenerate(); }}
+              placeholder="https://www.youtube.com/watch?v=…"
+              disabled={isLoading}
+              autoComplete="url"
+              spellCheck={false}
+              aria-label="YouTube video URL"
+              aria-invalid={!!error}
+              aria-describedby={error ? "url-error" : undefined}
+              style={{
+                width: "100%",
+                height: 48,
+                paddingLeft: 44,
+                paddingRight: url ? 38 : 14,
+                paddingTop: 0,
+                paddingBottom: 0,
+                fontSize: "0.9375rem",
+                color: "#111827",
+                background: error ? "#fef2f2" : "#ffffff",
+                border: `1.5px solid ${error ? "#fca5a5" : "#d1d5db"}`,
+                borderRadius: 10,
+                outline: "none",
+                fontFamily: "'Inter', sans-serif",
+                transition: "border-color 0.15s, box-shadow 0.15s",
+              }}
+              onFocus={e => {
+                e.currentTarget.style.borderColor = "#4f46e5";
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,70,229,0.12)";
+              }}
+              onBlur={e => {
+                e.currentTarget.style.borderColor = error ? "#fca5a5" : "#d1d5db";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            />
+          </div>
+
+          {/* ── STAGE 2: CHOOSE HOW TO STUDY ── */}
+          <div style={{ marginBottom: 18, paddingTop: 6 }}>
+            <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-flex items-center justify-center font-bold text-xs rounded-full"
+                  style={{
+                    width: 22,
+                    height: 22,
+                    background: "#4f46e5",
+                    color: "#ffffff",
+                  }}
+                >
+                  2
+                </span>
+                <label className="block text-sm font-bold uppercase tracking-wide" style={{ color: "#374151" }}>
+                  Stage 2: Choose How to Study
+                </label>
+              </div>
+              <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>
+                {mode === "basic" ? "⚡ Quick Revision (5–10 cards)" : "🧠 Deep Mastery (Dynamic, up to 40 cards)"}
+              </span>
             </div>
 
-            {/* Generate button */}
-            <button
-              id="generate-flashcards-btn"
-              type="button"
-              onClick={onGenerate}
-              disabled={isLoading}
-              aria-label="Generate flashcards from this YouTube video"
-              className="flex items-center justify-center gap-2 font-semibold text-white transition-all rounded-xl whitespace-nowrap"
-              style={{
-                background: isLoading ? "#818cf8" : "#4f46e5",
-                height: 48,
-                padding: "0 22px",
-                fontSize: "0.9375rem",
-                border: "none",
-                cursor: isLoading ? "not-allowed" : "pointer",
-                flexShrink: 0,
-                boxShadow: isLoading ? "none" : "0 2px 8px rgba(79,70,229,0.25)",
-              }}
-              onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.background = "#4338ca"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(79,70,229,0.35)"; } }}
-              onMouseLeave={e => { if (!isLoading) { e.currentTarget.style.background = "#4f46e5"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(79,70,229,0.25)"; } }}
+            <div
+              role="radiogroup"
+              aria-label="Study mode selection"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
             >
-              {isLoading ? (
-                <>
-                  <svg className="spin-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                  </svg>
-                  Generating…
-                </>
-              ) : (
-                <>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                  Generate Flashcards
-                </>
-              )}
-            </button>
+              {/* Option 1: Basic Study (Default) */}
+              <div
+                id="mode-basic-btn"
+                role="radio"
+                aria-checked={mode === "basic"}
+                tabIndex={isLoading ? -1 : 0}
+                onClick={() => { if (!isLoading) setMode("basic"); }}
+                onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !isLoading) setMode("basic"); }}
+                className="flex flex-col justify-between rounded-xl transition-all"
+                style={{
+                  padding: "14px 16px",
+                  cursor: isLoading ? "not-allowed" : "pointer",
+                  background: mode === "basic" ? "#f5f3ff" : "#ffffff",
+                  border: `2px solid ${mode === "basic" ? "#4f46e5" : "#e5e7eb"}`,
+                  boxShadow: mode === "basic" ? "0 0 0 1px #4f46e5, 0 2px 8px rgba(79,70,229,0.12)" : "none",
+                  opacity: isLoading ? 0.7 : 1,
+                  userSelect: "none",
+                }}
+              >
+                <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
+                  <div className="flex items-center gap-2">
+                    <span style={{ fontSize: "1.1rem" }}>⚡</span>
+                    <span className="font-bold text-sm" style={{ color: mode === "basic" ? "#312e81" : "#111827" }}>
+                      Basic Study
+                    </span>
+                    <span
+                      className="text-xs font-semibold rounded-full"
+                      style={{
+                        background: mode === "basic" ? "#e0e7ff" : "#f3f4f6",
+                        color: mode === "basic" ? "#4338ca" : "#6b7280",
+                        padding: "1px 8px",
+                        fontSize: "0.6875rem",
+                      }}
+                    >
+                      Default
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      width: 18,
+                      height: 18,
+                      borderRadius: "50%",
+                      border: `2px solid ${mode === "basic" ? "#4f46e5" : "#d1d5db"}`,
+                      background: mode === "basic" ? "#4f46e5" : "#ffffff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {mode === "basic" && (
+                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#ffffff" }} />
+                    )}
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.8125rem", color: "#6b7280", lineHeight: 1.4 }}>
+                  Generates 5–10 concise cards focusing on the most essential concepts for rapid review.
+                </p>
+              </div>
+
+              {/* Option 2: Intensive Study */}
+              <div
+                id="mode-intensive-btn"
+                role="radio"
+                aria-checked={mode === "intensive"}
+                tabIndex={isLoading ? -1 : 0}
+                onClick={() => { if (!isLoading) setMode("intensive"); }}
+                onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !isLoading) setMode("intensive"); }}
+                className="flex flex-col justify-between rounded-xl transition-all"
+                style={{
+                  padding: "14px 16px",
+                  cursor: isLoading ? "not-allowed" : "pointer",
+                  background: mode === "intensive" ? "#f5f3ff" : "#ffffff",
+                  border: `2px solid ${mode === "intensive" ? "#4f46e5" : "#e5e7eb"}`,
+                  boxShadow: mode === "intensive" ? "0 0 0 1px #4f46e5, 0 2px 8px rgba(79,70,229,0.12)" : "none",
+                  opacity: isLoading ? 0.7 : 1,
+                  userSelect: "none",
+                }}
+              >
+                <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
+                  <div className="flex items-center gap-2">
+                    <span style={{ fontSize: "1.1rem" }}>🧠</span>
+                    <span className="font-bold text-sm" style={{ color: mode === "intensive" ? "#312e81" : "#111827" }}>
+                      Intensive Study
+                    </span>
+                    <span
+                      className="text-xs font-semibold rounded-full"
+                      style={{
+                        background: mode === "intensive" ? "#e0e7ff" : "#f3f4f6",
+                        color: mode === "intensive" ? "#4338ca" : "#6b7280",
+                        padding: "1px 8px",
+                        fontSize: "0.6875rem",
+                      }}
+                    >
+                      In-Depth
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      width: 18,
+                      height: 18,
+                      borderRadius: "50%",
+                      border: `2px solid ${mode === "intensive" ? "#4f46e5" : "#d1d5db"}`,
+                      background: mode === "intensive" ? "#4f46e5" : "#ffffff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {mode === "intensive" && (
+                      <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#ffffff" }} />
+                    )}
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.8125rem", color: "#6b7280", lineHeight: 1.4 }}>
+                  Comprehensive breakdown of topics, subtopics, comparisons & scenarios (dynamic up to 40 cards).
+                </p>
+              </div>
+            </div>
           </div>
+
+          {/* Generate button (Full width) */}
+          <button
+            id="generate-flashcards-btn"
+            type="button"
+            onClick={onGenerate}
+            disabled={isLoading}
+            aria-label="Generate flashcards from this YouTube video"
+            className="flex items-center justify-center gap-2 font-semibold text-white transition-all rounded-xl w-full"
+            style={{
+              background: isLoading ? "#818cf8" : "#4f46e5",
+              height: 48,
+              padding: "0 24px",
+              fontSize: "0.9375rem",
+              border: "none",
+              cursor: isLoading ? "not-allowed" : "pointer",
+              boxShadow: isLoading ? "none" : "0 2px 8px rgba(79,70,229,0.25)",
+            }}
+            onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.background = "#4338ca"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(79,70,229,0.35)"; } }}
+            onMouseLeave={e => { if (!isLoading) { e.currentTarget.style.background = "#4f46e5"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(79,70,229,0.25)"; } }}
+          >
+            {isLoading ? (
+              <>
+                <svg className="spin-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                </svg>
+                {mode === "intensive" ? "Analyzing topics & generating intensive deck…" : "Generating flashcards…"}
+              </>
+            ) : (
+              <>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                Generate {mode === "intensive" ? "Intensive" : "Basic"} Flashcards
+              </>
+            )}
+          </button>
 
           {/* Hint text (idle) */}
           {status === "idle" && (
-            <p style={{ fontSize: "0.8125rem", color: "#9ca3af" }}>
+            <p style={{ fontSize: "0.8125rem", color: "#9ca3af", marginTop: 10, textAlign: "center" }}>
               Works with youtube.com and youtu.be links · No account needed
             </p>
+          )}
+
+          {/* Loading state notification banner */}
+          {status === "loading" && (
+            <div
+              role="status"
+              className="fade-up flex items-center gap-2.5 rounded-lg"
+              style={{
+                background: "#eef2ff",
+                border: "1px solid #c7d2fe",
+                color: "#3730a3",
+                padding: "10px 14px",
+                fontSize: "0.875rem",
+                marginTop: 12,
+              }}
+            >
+              <svg className="spin-icon shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+              </svg>
+              <span>
+                {mode === "intensive"
+                  ? "Analyzing video topics & subtopics to craft your in-depth deck (this may take 15–30s)…"
+                  : "Fetching transcript & crafting your quick revision flashcards…"}
+              </span>
+            </div>
           )}
 
           {/* Success banner */}
@@ -256,7 +445,7 @@ export default function HeroSection({
                 color: "#065f46",
                 padding: "10px 14px",
                 fontSize: "0.875rem",
-                marginTop: 10,
+                marginTop: 12,
               }}
             >
               <div className="flex items-center gap-2">
@@ -265,7 +454,9 @@ export default function HeroSection({
                   <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
                 <span className="font-semibold">
-                  {flashcardCount ? `${flashcardCount} flashcards generated!` : "Flashcards generated!"}
+                  {flashcardCount
+                    ? `${flashcardCount} flashcards generated (${mode === "intensive" ? "Intensive Study" : "Basic Study"})!`
+                    : "Flashcards generated!"}
                 </span>
               </div>
               <button
@@ -285,13 +476,6 @@ export default function HeroSection({
             </div>
           )}
 
-          {/* Loading state */}
-          {status === "loading" && (
-            <p style={{ fontSize: "0.8125rem", color: "#6b7280", marginTop: 8 }}>
-              Fetching transcript and generating flashcards…
-            </p>
-          )}
-
           {/* Error message */}
           {status === "error" && error && (
             <div
@@ -304,7 +488,7 @@ export default function HeroSection({
                 color: "#dc2626",
                 padding: "10px 14px",
                 fontSize: "0.875rem",
-                marginTop: 10,
+                marginTop: 12,
               }}
             >
               <svg className="shrink-0 mt-px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">

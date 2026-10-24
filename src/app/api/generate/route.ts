@@ -1,14 +1,21 @@
 import { YoutubeTranscript } from "youtube-transcript";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+export type StudyMode = "basic" | "intensive";
+
 export interface Flashcard {
   question: string;
   answer: string;
+  topic?: string;
+  timestamp?: string;
+  timestampSeconds?: number;
 }
 
 export async function POST(request: Request) {
   try {
-    const { url } = await request.json();
+    const body = await request.json();
+    const { url } = body;
+    const mode: StudyMode = body.mode === "intensive" ? "intensive" : "basic";
 
     if (!url || typeof url !== "string") {
       return Response.json({ error: "Missing or invalid URL." }, { status: 400 });
@@ -21,7 +28,7 @@ export async function POST(request: Request) {
     }
 
     // ── Fetch transcript ──────────────────────────────────────────────────────
-    let transcriptChunks: { text: string }[];
+    let transcriptChunks: { text: string; offset: number; duration?: number }[];
     try {
       transcriptChunks = await YoutubeTranscript.fetchTranscript(videoId);
     } catch (err) {
@@ -35,17 +42,43 @@ export async function POST(request: Request) {
       );
     }
 
-    const transcript = transcriptChunks.map((c) => c.text).join(" ").trim();
-
-    if (!transcript || transcript.length < 50) {
+    if (!transcriptChunks || transcriptChunks.length === 0) {
       return Response.json(
-        { error: "The transcript is too short or empty to generate flashcards." },
+        { error: "The transcript is empty or unavailable for this video." },
         { status: 422 }
       );
     }
 
-    // Limit transcript to ~12 000 chars to keep within token limits
-    const trimmedTranscript = transcript.slice(0, 12000);
+    // Build timestamped transcript lines (grouped every ~20s) so Gemini can cite accurate video timestamps
+    function formatTimestamp(ms: number): string {
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    }
+
+    let timestampedTranscript = "";
+    let lastOffset = -30000;
+    for (const chunk of transcriptChunks) {
+      if (chunk.offset - lastOffset >= 20000) {
+        timestampedTranscript += `\n[${formatTimestamp(chunk.offset)}] ${chunk.text}`;
+        lastOffset = chunk.offset;
+      } else {
+        timestampedTranscript += ` ${chunk.text}`;
+      }
+    }
+    timestampedTranscript = timestampedTranscript.trim();
+
+    if (timestampedTranscript.length < 50) {
+      return Response.json(
+        { error: "The transcript is too short to generate flashcards." },
+        { status: 422 }
+      );
+    }
+
+    // Dynamic transcript limit: Basic: 18,000 chars; Intensive: up to 65,000 chars
+    const transcriptLimit = mode === "intensive" ? 65000 : 18000;
+    const trimmedTranscript = timestampedTranscript.slice(0, transcriptLimit);
 
     // ── Generate flashcards with Gemini ───────────────────────────────────────
     const apiKey = process.env.GEMINI_API_KEY;
@@ -64,20 +97,59 @@ export async function POST(request: Request) {
       "gemini-3.8-flash"
     ];
 
-    const prompt = `You are an expert educator. Based on the following YouTube video transcript, create exactly 8 high-quality flashcards that capture the most important concepts, facts, and ideas.
-
-Return your response as a JSON array with this exact structure (no markdown, no code blocks, just raw JSON):
-[
-  { "question": "...", "answer": "..." },
-  ...
-]
+    const prompt = mode === "intensive"
+      ? `You are an expert educator and curriculum designer conducting a content-aware, in-depth mastery analysis of a video.
+Analyze the following timestamped video transcript to:
+1. Identify all meaningful topics, key subtopics, architectural principles, trade-offs, and practical applications.
+2. Dynamically determine the appropriate number of flashcards needed based on content complexity and topic coverage (aiming for approximately 2 well-crafted questions per meaningful topic/subtopic). Do NOT base the count solely on duration.
+3. Generate a balanced mix of question types:
+   - Conceptual: core definitions and key terminology
+   - Explanatory: how and why mechanisms work under the hood
+   - Comparison-based: trade-offs, differences between approaches
+   - Application-based: real-world scenarios and practical decisions
 
 Rules:
-- Questions and answers MUST ALWAYS be written in English, regardless of the video's original language (translate concepts accurately into English).
-- Questions should be specific and test understanding, not just recall
-- Answers should be concise but complete (1-3 sentences)
-- Cover the breadth of the content, not just the beginning
-- Use clear, simple language
+- Questions and answers MUST ALWAYS be written in clear English, regardless of the video's original language.
+- Do NOT artificially restrict to 8 cards. Generate as many as needed to thoroughly cover all topics (capped at a maximum of 40 flashcards).
+- Include the approximate "timestamp" (MM:SS) and "timestampSeconds" (integer seconds) from the transcript tags where this concept is discussed.
+- Questions must test deep understanding, not surface trivia.
+- Answers should be comprehensive, accurate, and easy to read (2-4 sentences explaining the 'why' and context).
+- Cover the entire video material thoroughly, avoiding duplicate or repetitive questions.
+- Return your response as a JSON array with this exact structure (no markdown, no code blocks, just raw JSON):
+[
+  {
+    "question": "...",
+    "answer": "...",
+    "topic": "Specific Topic Name",
+    "timestamp": "MM:SS",
+    "timestampSeconds": 125
+  }
+]
+
+TRANSCRIPT:
+${trimmedTranscript}`
+      : `You are an expert educator creating a quick revision study set.
+Analyze the following timestamped video transcript to identify the top core concepts and takeaways.
+Generate approximately 5 to 10 (target ~8) concise, high-priority flashcards for rapid revision.
+
+Rules:
+- Questions and answers MUST ALWAYS be written in clear English, regardless of the video's original language.
+- Questions should be clear, concise, and beginner-friendly for quick review.
+- Answers should be direct, punchy, and clear (1-2 sentences).
+- Prioritize only the most essential fundamental concepts.
+- Include the approximate "timestamp" (MM:SS) and "timestampSeconds" (integer seconds) from the transcript tags where this concept is discussed.
+- Generate between 5 and 10 flashcards total.
+- Avoid duplicate questions.
+- Return your response as a JSON array with this exact structure (no markdown, no code blocks, just raw JSON):
+[
+  {
+    "question": "...",
+    "answer": "...",
+    "topic": "Topic Name",
+    "timestamp": "MM:SS",
+    "timestampSeconds": 45
+  }
+]
 
 TRANSCRIPT:
 ${trimmedTranscript}`;
@@ -121,6 +193,11 @@ ${trimmedTranscript}`;
       if (!Array.isArray(flashcards) || flashcards.length === 0) {
         throw new Error("Not a valid array");
       }
+
+      // Hard cap at 40 flashcards to control response time & complexity
+      if (flashcards.length > 40) {
+        flashcards = flashcards.slice(0, 40);
+      }
     } catch (parseErr) {
       console.error("Failed to parse Gemini response:", responseText, parseErr);
       return Response.json(
@@ -129,7 +206,7 @@ ${trimmedTranscript}`;
       );
     }
 
-    return Response.json({ flashcards, videoId });
+    return Response.json({ flashcards, videoId, mode });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred.";
     console.error("API route error:", message);
