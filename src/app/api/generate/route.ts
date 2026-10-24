@@ -14,60 +14,97 @@ export interface Flashcard {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { url } = body;
+    const { url, manualTranscript } = body;
     const mode: StudyMode = body.mode === "intensive" ? "intensive" : "basic";
 
-    if (!url || typeof url !== "string") {
-      return Response.json({ error: "Missing or invalid URL." }, { status: 400 });
-    }
-
-    // ── Extract video ID ──────────────────────────────────────────────────────
-    const videoId = extractVideoId(url);
-    if (!videoId) {
-      return Response.json({ error: "Could not extract a video ID from the provided URL." }, { status: 400 });
-    }
-
-    // ── Fetch transcript ──────────────────────────────────────────────────────
-    let transcriptChunks: { text: string; offset: number; duration?: number }[];
-    try {
-      transcriptChunks = await YoutubeTranscript.fetchTranscript(videoId);
-    } catch (err) {
-      console.error("Transcript error:", err);
-      return Response.json(
-        {
-          error:
-            "Could not fetch the transcript for this video. Make sure the video has subtitles/captions enabled.",
-        },
-        { status: 422 }
-      );
-    }
-
-    if (!transcriptChunks || transcriptChunks.length === 0) {
-      return Response.json(
-        { error: "The transcript is empty or unavailable for this video." },
-        { status: 422 }
-      );
-    }
-
-    // Build timestamped transcript lines (grouped every ~20s) so Gemini can cite accurate video timestamps
-    function formatTimestamp(ms: number): string {
-      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-    }
-
     let timestampedTranscript = "";
-    let lastOffset = -30000;
-    for (const chunk of transcriptChunks) {
-      if (chunk.offset - lastOffset >= 20000) {
-        timestampedTranscript += `\n[${formatTimestamp(chunk.offset)}] ${chunk.text}`;
-        lastOffset = chunk.offset;
-      } else {
-        timestampedTranscript += ` ${chunk.text}`;
+    let videoId: string | null = null;
+
+    if (manualTranscript && typeof manualTranscript === "string" && manualTranscript.trim().length >= 30) {
+      timestampedTranscript = manualTranscript.trim();
+      videoId = url ? extractVideoId(url) : null;
+    } else {
+      if (!url || typeof url !== "string") {
+        return Response.json({ error: "Missing or invalid URL." }, { status: 400 });
       }
+
+      // ── Extract video ID ──────────────────────────────────────────────────────
+      videoId = extractVideoId(url);
+      if (!videoId) {
+        return Response.json({ error: "Could not extract a video ID from the provided URL." }, { status: 400 });
+      }
+
+      // ── Fetch transcript ──────────────────────────────────────────────────────
+      let transcriptChunks: { text: string; offset: number; duration?: number }[] | null = null;
+
+      // 1. Try Supadata API first if API key is configured (bypasses YouTube cloud IP blocks on Vercel)
+      const supadataKey = process.env.SUPADATA_API_KEY;
+      if (supadataKey && supadataKey !== "your_supadata_api_key_here") {
+        try {
+          const supaRes = await fetch(
+            `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`,
+            {
+              headers: {
+                "x-api-key": supadataKey,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          if (supaRes.ok) {
+            const supaData = await supaRes.json();
+            if (Array.isArray(supaData.content) && supaData.content.length > 0) {
+              transcriptChunks = supaData.content;
+            }
+          } else {
+            console.warn("Supadata API returned status:", supaRes.status);
+          }
+        } catch (supaErr) {
+          console.warn("Supadata fetch failed, falling back to direct scraper:", supaErr);
+        }
+      }
+
+      // 2. Fall back to standard YoutubeTranscript scraper if Supadata wasn't used or returned no items
+      if (!transcriptChunks || transcriptChunks.length === 0) {
+        try {
+          transcriptChunks = await YoutubeTranscript.fetchTranscript(videoId);
+        } catch (err) {
+          console.error("Transcript error:", err);
+          return Response.json(
+            {
+              error:
+                "Could not fetch the transcript for this video. YouTube blocks datacenter IPs or captions are disabled. You can paste notes or transcript manually below!",
+            },
+            { status: 422 }
+          );
+        }
+      }
+
+      if (!transcriptChunks || transcriptChunks.length === 0) {
+        return Response.json(
+          { error: "The transcript is empty or unavailable for this video." },
+          { status: 422 }
+        );
+      }
+
+      // Build timestamped transcript lines (grouped every ~20s) so Gemini can cite accurate video timestamps
+      function formatTimestamp(ms: number): string {
+        const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      }
+
+      let lastOffset = -30000;
+      for (const chunk of transcriptChunks) {
+        if (chunk.offset - lastOffset >= 20000) {
+          timestampedTranscript += `\n[${formatTimestamp(chunk.offset)}] ${chunk.text}`;
+          lastOffset = chunk.offset;
+        } else {
+          timestampedTranscript += ` ${chunk.text}`;
+        }
+      }
+      timestampedTranscript = timestampedTranscript.trim();
     }
-    timestampedTranscript = timestampedTranscript.trim();
 
     if (timestampedTranscript.length < 50) {
       return Response.json(

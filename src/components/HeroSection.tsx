@@ -7,6 +7,10 @@ import type { StudyMode } from "@/app/api/generate/route";
 interface HeroSectionProps {
   url: string;
   setUrl: Dispatch<SetStateAction<string>>;
+  manualTranscript: string;
+  setManualTranscript: Dispatch<SetStateAction<string>>;
+  inputTab: "url" | "notes";
+  setInputTab: Dispatch<SetStateAction<"url" | "notes">>;
   error: string;
   setError: Dispatch<SetStateAction<string>>;
   isLoading: boolean;
@@ -21,6 +25,10 @@ interface HeroSectionProps {
 export default function HeroSection({
   url,
   setUrl,
+  manualTranscript,
+  setManualTranscript,
+  inputTab,
+  setInputTab,
   error,
   setError,
   isLoading,
@@ -110,96 +118,236 @@ export default function HeroSection({
             padding: 28,
           }}
         >
-          {/* Input label */}
-          <label
-            htmlFor="youtube-url-input"
-            className="block text-sm font-semibold"
-            style={{ color: "#374151", marginBottom: 8 }}
+          {/* Source Mode Tabs */}
+          <div
+            className="flex items-center rounded-xl p-1"
+            style={{
+              background: "#f3f4f6",
+              marginBottom: 20,
+              gap: 4,
+            }}
           >
-            YouTube video URL
-          </label>
-
-          {/* URL input with YouTube icon */}
-          <div className="relative" style={{ marginBottom: 16 }}>
-            {/* YouTube icon */}
-            <span
-              className="absolute flex items-center pointer-events-none"
-              style={{ left: 14, top: "50%", transform: "translateY(-50%)" }}
-              aria-hidden="true"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <rect x="2" y="5" width="20" height="14" rx="3" fill="#FF0000" />
-                <polygon points="10,9 10,15 16,12" fill="white" />
-              </svg>
-            </span>
-
-            {/* Clear button */}
-            {url && !isLoading && (
-              <button
-                type="button"
-                onClick={() => { setUrl(""); setError(""); inputRef.current?.focus(); }}
-                aria-label="Clear URL"
-                className="absolute flex items-center justify-center transition-colors"
-                style={{
-                  right: 12,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#9ca3af",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 4,
-                }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#374151")}
-                onMouseLeave={e => (e.currentTarget.style.color = "#9ca3af")}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            )}
-
-            <input
-              ref={inputRef}
-              id="youtube-url-input"
-              type="url"
-              value={url}
-              onChange={(e) => { setUrl(e.target.value); if (error) setError(""); }}
-              onKeyDown={(e) => { if (e.key === "Enter" && !isLoading) onGenerate(); }}
-              placeholder="https://www.youtube.com/watch?v=…"
-              disabled={isLoading}
-              autoComplete="url"
-              spellCheck={false}
-              aria-label="YouTube video URL"
-              aria-invalid={!!error}
-              aria-describedby={error ? "url-error" : undefined}
+            <button
+              type="button"
+              onClick={() => { setInputTab("url"); setError(""); }}
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold transition-all"
               style={{
-                width: "100%",
-                height: 48,
-                paddingLeft: 44,
-                paddingRight: url ? 38 : 14,
-                paddingTop: 0,
-                paddingBottom: 0,
-                fontSize: "0.9375rem",
-                color: "#111827",
-                background: error ? "#fef2f2" : "#ffffff",
-                border: `1.5px solid ${error ? "#fca5a5" : "#d1d5db"}`,
-                borderRadius: 10,
-                outline: "none",
-                fontFamily: "'Inter', sans-serif",
-                transition: "border-color 0.15s, box-shadow 0.15s",
+                background: inputTab === "url" ? "#ffffff" : "transparent",
+                color: inputTab === "url" ? "#111827" : "#6b7280",
+                boxShadow: inputTab === "url" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                border: "none",
+                cursor: "pointer",
               }}
-              onFocus={e => {
-                e.currentTarget.style.borderColor = "#4f46e5";
-                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,70,229,0.12)";
+            >
+              <span>📺</span> YouTube URL
+            </button>
+            <button
+              type="button"
+              onClick={() => { setInputTab("notes"); setError(""); }}
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold transition-all"
+              style={{
+                background: inputTab === "notes" ? "#ffffff" : "transparent",
+                color: inputTab === "notes" ? "#111827" : "#6b7280",
+                boxShadow: inputTab === "notes" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                border: "none",
+                cursor: "pointer",
               }}
-              onBlur={e => {
-                e.currentTarget.style.borderColor = error ? "#fca5a5" : "#d1d5db";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            />
+            >
+              <span>📝</span> Paste Notes / Transcript
+            </button>
           </div>
+
+          {inputTab === "url" ? (
+            <>
+              {/* Input label */}
+              <label
+                htmlFor="youtube-url-input"
+                className="block text-sm font-semibold"
+                style={{ color: "#374151", marginBottom: 8 }}
+              >
+                YouTube video URL
+              </label>
+
+              {/* URL input with YouTube icon */}
+              <div className="relative" style={{ marginBottom: 10 }}>
+                {/* YouTube icon */}
+                <span
+                  className="absolute flex items-center pointer-events-none"
+                  style={{ left: 14, top: "50%", transform: "translateY(-50%)" }}
+                  aria-hidden="true"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <rect x="2" y="5" width="20" height="14" rx="3" fill="#FF0000" />
+                    <polygon points="10,9 10,15 16,12" fill="white" />
+                  </svg>
+                </span>
+
+                {/* Clear button */}
+                {url && !isLoading && (
+                  <button
+                    type="button"
+                    onClick={() => { setUrl(""); setError(""); inputRef.current?.focus(); }}
+                    aria-label="Clear URL"
+                    className="absolute flex items-center justify-center transition-colors"
+                    style={{
+                      right: 12,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "#9ca3af",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 4,
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.color = "#374151")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "#9ca3af")}
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                )}
+
+                <input
+                  ref={inputRef}
+                  id="youtube-url-input"
+                  type="url"
+                  value={url}
+                  onChange={(e) => { setUrl(e.target.value); if (error) setError(""); }}
+                  onKeyDown={(e) => { if (e.key === "Enter" && !isLoading) onGenerate(); }}
+                  placeholder="https://www.youtube.com/watch?v=…"
+                  disabled={isLoading}
+                  autoComplete="url"
+                  spellCheck={false}
+                  aria-label="YouTube video URL"
+                  aria-invalid={!!error}
+                  aria-describedby={error ? "url-error" : undefined}
+                  style={{
+                    width: "100%",
+                    height: 48,
+                    paddingLeft: 44,
+                    paddingRight: url ? 38 : 14,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    fontSize: "0.9375rem",
+                    color: "#111827",
+                    background: error ? "#fef2f2" : "#ffffff",
+                    border: `1.5px solid ${error ? "#fca5a5" : "#d1d5db"}`,
+                    borderRadius: 10,
+                    outline: "none",
+                    fontFamily: "'Inter', sans-serif",
+                    transition: "border-color 0.15s, box-shadow 0.15s",
+                  }}
+                  onFocus={e => {
+                    e.currentTarget.style.borderColor = "#4f46e5";
+                    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,70,229,0.12)";
+                  }}
+                  onBlur={e => {
+                    e.currentTarget.style.borderColor = error ? "#fca5a5" : "#d1d5db";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+
+              {/* Verified sample pills */}
+              <div className="flex flex-wrap items-center gap-1.5" style={{ marginBottom: 16 }}>
+                <span style={{ fontSize: "0.75rem", color: "#6b7280", fontWeight: 500 }}>
+                  Try verified sample:
+                </span>
+                {[
+                  { label: "⚡ Neural Networks", url: "https://www.youtube.com/watch?v=aircAruvnKk" },
+                  { label: "⚡ Scientific Method", url: "https://www.youtube.com/watch?v=8aGhZQkoFbQ" },
+                  { label: "⚡ PC Hardware", url: "https://youtu.be/fGVfqA_Iv6s" },
+                ].map((sample) => (
+                  <button
+                    key={sample.label}
+                    type="button"
+                    onClick={() => {
+                      setUrl(sample.url);
+                      setError("");
+                      inputRef.current?.focus();
+                    }}
+                    className="inline-flex items-center text-xs font-medium rounded-full transition-colors"
+                    style={{
+                      background: "#f5f3ff",
+                      color: "#4f46e5",
+                      border: "1px solid #ddd6fe",
+                      padding: "2px 9px",
+                      cursor: "pointer",
+                      fontSize: "0.6875rem",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#ede9fe")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "#f5f3ff")}
+                  >
+                    {sample.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div style={{ marginBottom: 16 }}>
+              <label
+                htmlFor="manual-transcript-input"
+                className="block text-sm font-semibold"
+                style={{ color: "#374151", marginBottom: 8 }}
+              >
+                Study Notes, Article, or Audio Transcript
+              </label>
+              <textarea
+                id="manual-transcript-input"
+                rows={5}
+                value={manualTranscript}
+                onChange={(e) => {
+                  setManualTranscript(e.target.value);
+                  if (error) setError("");
+                }}
+                disabled={isLoading}
+                placeholder="Paste speech transcript, lecture notes, textbook excerpt, or article text here..."
+                style={{
+                  width: "100%",
+                  padding: "12px 14px",
+                  fontSize: "0.875rem",
+                  color: "#111827",
+                  background: error ? "#fef2f2" : "#ffffff",
+                  border: `1.5px solid ${error ? "#fca5a5" : "#d1d5db"}`,
+                  borderRadius: 10,
+                  outline: "none",
+                  fontFamily: "'Inter', sans-serif",
+                  resize: "vertical",
+                  lineHeight: 1.5,
+                  marginBottom: 10,
+                }}
+              />
+              <div>
+                <label
+                  htmlFor="optional-video-url"
+                  className="block text-xs font-medium"
+                  style={{ color: "#6b7280", marginBottom: 4 }}
+                >
+                  Optional YouTube URL (to keep embedded player synced in Studio):
+                </label>
+                <input
+                  id="optional-video-url"
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://www.youtube.com/watch?v=… (optional)"
+                  disabled={isLoading}
+                  style={{
+                    width: "100%",
+                    height: 38,
+                    padding: "0 12px",
+                    fontSize: "0.8125rem",
+                    color: "#111827",
+                    border: "1px solid #d1d5db",
+                    borderRadius: 8,
+                    outline: "none",
+                  }}
+                />
+              </div>
+            </div>
+          )}
 
           {/* ── Study Mode Selector ── */}
           <div style={{ marginBottom: 16 }}>
@@ -455,22 +603,46 @@ export default function HeroSection({
             <div
               id="url-error"
               role="alert"
-              className="fade-up flex items-start gap-2 rounded-lg"
+              className="fade-up flex flex-col gap-2 rounded-lg"
               style={{
                 background: "#fef2f2",
                 border: "1px solid #fecaca",
                 color: "#dc2626",
-                padding: "10px 14px",
+                padding: "12px 14px",
                 fontSize: "0.875rem",
                 marginTop: 12,
               }}
             >
-              <svg className="shrink-0 mt-px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              {error}
+              <div className="flex items-start gap-2">
+                <svg className="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>{error}</span>
+              </div>
+              {inputTab === "url" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setInputTab("notes");
+                    setError("");
+                  }}
+                  className="inline-flex items-center gap-1.5 font-semibold text-xs rounded transition-colors self-start"
+                  style={{
+                    background: "#fee2e2",
+                    color: "#991b1b",
+                    padding: "4px 10px",
+                    border: "1px solid #fca5a5",
+                    cursor: "pointer",
+                    marginLeft: 24,
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#fecaca")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "#fee2e2")}
+                >
+                  <span>📝</span> Switch to Paste Notes / Transcript manually →
+                </button>
+              )}
             </div>
           )}
         </div>
