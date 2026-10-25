@@ -48,13 +48,8 @@ export async function POST(request: Request) {
             }
           );
 
-          if (supaRes.ok) {
-            const supaData = await supaRes.json();
-            if (Array.isArray(supaData.content) && supaData.content.length > 0) {
-              transcriptChunks = supaData.content;
-            }
-          } else if (supaRes.status === 202) {
-            // 202 Accepted: AI Whisper audio transcription job started for uncaptioned video
+          if (supaRes.status === 202) {
+            // 202 Accepted: AI Whisper audio transcription job queued for uncaptioned video — poll for result
             const supaData = await supaRes.json();
             const jobId = supaData.jobId;
             if (jobId) {
@@ -79,6 +74,12 @@ export async function POST(request: Request) {
                 }
               }
             }
+          } else if (supaRes.ok) {
+            // 200: transcript returned immediately (video has native captions)
+            const supaData = await supaRes.json();
+            if (Array.isArray(supaData.content) && supaData.content.length > 0) {
+              transcriptChunks = supaData.content;
+            }
           } else {
             console.warn("Supadata API returned status:", supaRes.status);
           }
@@ -93,10 +94,12 @@ export async function POST(request: Request) {
           transcriptChunks = await YoutubeTranscript.fetchTranscript(videoId);
         } catch (err) {
           console.error("Transcript error:", err);
+          const supadataConfigured = !!(process.env.SUPADATA_API_KEY && process.env.SUPADATA_API_KEY !== "your_supadata_api_key_here");
           return Response.json(
             {
-              error:
-                "Could not fetch transcript for this video. Captions may be disabled on YouTube. Set a SUPADATA_API_KEY to enable automatic AI audio transcription for videos without captions.",
+              error: supadataConfigured
+                ? "Could not fetch a transcript for this video — captions are disabled and AI audio transcription also failed. Try a different video."
+                : "Could not fetch transcript for this video. Captions may be disabled on YouTube. Set a SUPADATA_API_KEY to enable automatic AI audio transcription for videos without captions.",
             },
             { status: 422 }
           );
