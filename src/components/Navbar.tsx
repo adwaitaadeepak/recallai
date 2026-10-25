@@ -46,8 +46,8 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Nav links — desktop only */}
-        <div className="hidden md:flex items-center" style={{ gap: 28 }}>
+        {/* Nav links */}
+        <div className="flex items-center" style={{ gap: 28 }}>
           <a href="#features" className="text-sm font-semibold no-underline transition-colors" style={{ color: "#94a3b8" }}
             onMouseEnter={e => (e.currentTarget.style.color = "#ffffff")}
             onMouseLeave={e => (e.currentTarget.style.color = "#94a3b8")}>
@@ -59,28 +59,6 @@ export default function Navbar() {
             How it works
           </a>
         </div>
-
-        {/* CTA button */}
-        <a
-          href="#generate"
-          className="no-underline rounded-full text-xs font-bold text-white transition-all shadow-md"
-          style={{
-            background: "linear-gradient(135deg, #5c52ff 0%, #4338ca 100%)",
-            padding: "9px 22px",
-            letterSpacing: "0.02em",
-            boxShadow: "0 0 20px rgba(92, 82, 255, 0.35)",
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.filter = "brightness(1.15)";
-            e.currentTarget.style.boxShadow = "0 0 26px rgba(92, 82, 255, 0.55)";
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.filter = "none";
-            e.currentTarget.style.boxShadow = "0 0 20px rgba(92, 82, 255, 0.35)";
-          }}
-        >
-          Get Started
-        </a>
       </nav>
     </header>
   );

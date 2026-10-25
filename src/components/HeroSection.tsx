@@ -256,50 +256,6 @@ export default function HeroSection({
                   }}
                 />
               </div>
-
-              {/* Verified sample pills */}
-              <div className="flex flex-wrap items-center gap-1.5" style={{ marginBottom: 18 }}>
-                <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 600 }}>
-                  Try verified sample:
-                </span>
-                {[
-                  { label: "⚡ Neural Networks", url: "https://www.youtube.com/watch?v=aircAruvnKk" },
-                  { label: "⚡ Scientific Method", url: "https://www.youtube.com/watch?v=8aGhZQkoFbQ" },
-                  { label: "⚡ PC Hardware", url: "https://youtu.be/fGVfqA_Iv6s" },
-                ].map((sample) => (
-                  <button
-                    key={sample.label}
-                    type="button"
-                    onClick={() => {
-                      setUrl(sample.url);
-                      setError("");
-                      inputRef.current?.focus();
-                    }}
-                    className="inline-flex items-center text-xs font-semibold rounded-full transition-colors"
-                    style={{
-                      background: "rgba(92, 82, 255, 0.12)",
-                      color: "#c7d2fe",
-                      border: "1px solid rgba(92, 82, 255, 0.3)",
-                      padding: "3px 11px",
-                      cursor: "pointer",
-                      fontSize: "0.72rem",
-                      fontFamily: "'Sometype Mono', monospace",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(92, 82, 255, 0.28)";
-                      e.currentTarget.style.color = "#ffffff";
-                      e.currentTarget.style.borderColor = "#5c52ff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(92, 82, 255, 0.12)";
-                      e.currentTarget.style.color = "#c7d2fe";
-                      e.currentTarget.style.borderColor = "rgba(92, 82, 255, 0.3)";
-                    }}
-                  >
-                    {sample.label}
-                  </button>
-                ))}
-              </div>
             </>
           ) : (
             <div style={{ marginBottom: 18 }}>
@@ -552,12 +508,6 @@ export default function HeroSection({
             )}
           </button>
 
-          {/* Hint text (idle) */}
-          {status === "idle" && (
-            <p style={{ fontSize: "0.8125rem", color: "#64748b", marginTop: 12, textAlign: "center" }}>
-              Works with youtube.com and youtu.be links · No account needed
-            </p>
-          )}
 
           {/* Loading state notification banner */}
           {status === "loading" && (

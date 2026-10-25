@@ -3,19 +3,16 @@ const steps = [
     number: "01",
     title: "Paste a YouTube URL",
     description: "Copy any YouTube video link — lecture, tutorial, documentary, or podcast — and paste it into the input above.",
-    note: "Supports youtube.com and youtu.be",
   },
   {
     number: "02",
     title: "AI Analyses the Video",
     description: "RecallAI extracts the transcript and uses large language models to identify the ideas and facts worth remembering.",
-    note: "Powered by state-of-the-art LLMs",
   },
   {
     number: "03",
     title: "Study Your Flashcards",
-    description: "Get a clean Q&A deck built for spaced repetition. Download it or import it into your favourite study tool.",
-    note: "Export to Anki, CSV, or Notion",
+    description: "Review cards in the interactive video-synced study studio, flip to test your recall, or export to CSV in one click.",
   },
 ];
 
@@ -108,12 +105,9 @@ export default function HowItWorksSection() {
               >
                 {step.title}
               </h3>
-              <p style={{ color: "#94a3b8", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: 14, fontFamily: "'Nunito', sans-serif" }}>
+              <p style={{ color: "#94a3b8", fontSize: "0.875rem", lineHeight: 1.6, margin: 0, fontFamily: "'Nunito', sans-serif" }}>
                 {step.description}
               </p>
-              <span className="font-mono-accent" style={{ fontSize: "0.75rem", color: "#a5b4fc", fontWeight: 600 }}>
-                {step.note}
-              </span>
             </div>
           ))}
         </div>

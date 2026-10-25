@@ -72,6 +72,28 @@ export default function FlashcardsSection({
     setIsFlipped(false);
   };
 
+  const handleExportCSV = () => {
+    if (!cards || cards.length === 0) return;
+    const header = "Question,Answer,Timestamp\n";
+    const rows = cards
+      .map((c) => {
+        const q = `"${(c.question || "").replace(/"/g, '""')}"`;
+        const a = `"${(c.answer || "").replace(/"/g, '""')}"`;
+        const t = `"${c.timestamp || ""}"`;
+        return `${q},${a},${t}`;
+      })
+      .join("\n");
+    const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
+    const downloadUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", `recallai_flashcards_${cards.length}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(downloadUrl);
+  };
+
   const handleSeek = (seconds?: number) => {
     if (typeof seconds !== "number" || isNaN(seconds)) return;
     setPlayerStartTime(seconds);
@@ -213,6 +235,38 @@ export default function FlashcardsSection({
               Grid
             </button>
           </div>
+
+          {/* Export Deck as CSV button */}
+          <button
+            id="export-deck-btn"
+            type="button"
+            onClick={handleExportCSV}
+            className="inline-flex items-center gap-1.5 text-xs font-bold rounded-full transition-all cursor-pointer"
+            title="Download deck as CSV (compatible with Anki, Notion, Quizlet, and Excel)"
+            style={{
+              background: "rgba(92, 82, 255, 0.18)",
+              border: "1px solid rgba(92, 82, 255, 0.4)",
+              color: "#c7d2fe",
+              padding: "8px 16px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(92, 82, 255, 0.35)";
+              e.currentTarget.style.borderColor = "#5c52ff";
+              e.currentTarget.style.color = "#ffffff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(92, 82, 255, 0.18)";
+              e.currentTarget.style.borderColor = "rgba(92, 82, 255, 0.4)";
+              e.currentTarget.style.color = "#c7d2fe";
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span>Export CSV</span>
+          </button>
 
           {/* Return to Screen 1 button */}
           <button
@@ -366,20 +420,6 @@ export default function FlashcardsSection({
                       >
                         Card {currentIndex + 1} of {cards.length}
                       </span>
-                      {currentCard?.topic && (
-                        <span
-                          className="text-xs font-semibold truncate max-w-[170px] rounded-full"
-                          style={{
-                            color: "#cbd5e1",
-                            background: "rgba(255, 255, 255, 0.06)",
-                            border: "1px solid rgba(255, 255, 255, 0.08)",
-                            padding: "3px 10px",
-                            fontFamily: "'Nunito', sans-serif",
-                          }}
-                        >
-                          {currentCard.topic}
-                        </span>
-                      )}
                     </div>
 
                     {/* Timestamp jump button */}
@@ -497,9 +537,6 @@ export default function FlashcardsSection({
                         >
                           Question
                         </span>
-                        <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontFamily: "'Nunito', sans-serif" }}>
-                          Tap card to reveal answer ⟲
-                        </span>
                       </div>
 
                       {/* Question Text */}
@@ -538,10 +575,7 @@ export default function FlashcardsSection({
                           fontFamily: "'Nunito', sans-serif",
                         }}
                       >
-                        <span className="font-mono-accent">Card {currentIndex + 1} / {cards.length}</span>
-                        <span className="font-bold" style={{ color: "#a5b4fc" }}>
-                          Click to Flip →
-                        </span>
+                        <span className="font-mono-accent">Card {currentIndex + 1} of {cards.length}</span>
                       </div>
                     </div>
 
@@ -635,10 +669,7 @@ export default function FlashcardsSection({
                           fontFamily: "'Nunito', sans-serif",
                         }}
                       >
-                        <span>Explanation</span>
-                        <span style={{ color: "#ffffff", fontWeight: 700 }}>
-                          Tap to view question ⟲
-                        </span>
+                        <span className="font-mono-accent">Card {currentIndex + 1} of {cards.length}</span>
                       </div>
                     </div>
                   </div>
