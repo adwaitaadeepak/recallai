@@ -18,8 +18,6 @@ export type GenerateStatus =
 
 export default function Home() {
   const [url, setUrl] = useState("");
-  const [manualTranscript, setManualTranscript] = useState("");
-  const [inputTab, setInputTab] = useState<"url" | "notes">("url");
   const [mode, setMode] = useState<StudyMode>("basic");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -38,26 +36,18 @@ export default function Home() {
     setStatus("idle");
     setFlashcards([]);
 
-    if (inputTab === "url") {
-      if (!url.trim()) {
-        setError("Please paste a YouTube URL before generating.");
-        setStatus("error");
-        return;
-      }
+    if (!url.trim()) {
+      setError("Please paste a YouTube URL before generating.");
+      setStatus("error");
+      return;
+    }
 
-      if (!isValidYouTubeUrl(url)) {
-        setError(
-          "That doesn't look like a valid YouTube URL. Try something like https://www.youtube.com/watch?v=…"
-        );
-        setStatus("error");
-        return;
-      }
-    } else {
-      if (!manualTranscript.trim() || manualTranscript.trim().length < 30) {
-        setError("Please paste at least 30 characters of transcript or study notes.");
-        setStatus("error");
-        return;
-      }
+    if (!isValidYouTubeUrl(url)) {
+      setError(
+        "That doesn't look like a valid YouTube URL. Try something like https://www.youtube.com/watch?v=…"
+      );
+      setStatus("error");
+      return;
     }
 
     setIsLoading(true);
@@ -67,11 +57,7 @@ export default function Home() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url: url.trim(),
-          manualTranscript: inputTab === "notes" ? manualTranscript.trim() : undefined,
-          mode,
-        }),
+        body: JSON.stringify({ url: url.trim(), mode }),
       });
 
       const data = await res.json();
@@ -96,7 +82,6 @@ export default function Home() {
 
   const handleReset = () => {
     setUrl("");
-    setManualTranscript("");
     setError("");
     setStatus("idle");
     setFlashcards([]);
@@ -121,10 +106,6 @@ export default function Home() {
           <HeroSection
             url={url}
             setUrl={setUrl}
-            manualTranscript={manualTranscript}
-            setManualTranscript={setManualTranscript}
-            inputTab={inputTab}
-            setInputTab={setInputTab}
             error={error}
             setError={setError}
             isLoading={isLoading}

@@ -14,35 +14,32 @@ export interface Flashcard {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { url, manualTranscript } = body;
+    const { url } = body;
     const mode: StudyMode = body.mode === "intensive" ? "intensive" : "basic";
 
     let timestampedTranscript = "";
     let videoId: string | null = null;
 
-    if (manualTranscript && typeof manualTranscript === "string" && manualTranscript.trim().length >= 30) {
-      timestampedTranscript = manualTranscript.trim();
-      videoId = url ? extractVideoId(url) : null;
-    } else {
-      if (!url || typeof url !== "string") {
-        return Response.json({ error: "Missing or invalid URL." }, { status: 400 });
-      }
+    if (!url || typeof url !== "string") {
+      return Response.json({ error: "Missing or invalid URL." }, { status: 400 });
+    }
 
-      // ── Extract video ID ──────────────────────────────────────────────────────
-      videoId = extractVideoId(url);
-      if (!videoId) {
-        return Response.json({ error: "Could not extract a video ID from the provided URL." }, { status: 400 });
-      }
+    // ── Extract video ID ──────────────────────────────────────────────────────
+    videoId = extractVideoId(url);
+    if (!videoId) {
+      return Response.json({ error: "Could not extract a video ID from the provided URL." }, { status: 400 });
+    }
 
-      // ── Fetch transcript ──────────────────────────────────────────────────────
-      let transcriptChunks: { text: string; offset: number; duration?: number }[] | null = null;
+    // ── Fetch transcript ──────────────────────────────────────────────────────
+    let transcriptChunks: { text: string; offset: number; duration?: number }[] | null = null;
 
-      // 1. Try Supadata API first if API key is configured (bypasses YouTube cloud IP blocks on Vercel)
+      // 1. Try Supadata API first with mode=auto (native captions first, automatic AI Whisper audio fallback if captions missing)
       const supadataKey = process.env.SUPADATA_API_KEY;
       if (supadataKey && supadataKey !== "your_supadata_api_key_here") {
         try {
+          const ytUrl = `https://www.youtube.com/watch?v=${videoId}`;
           const supaRes = await fetch(
-            `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`,
+            `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(ytUrl)}&mode=auto`,
             {
               headers: {
                 "x-api-key": supadataKey,
@@ -50,7 +47,35 @@ export async function POST(request: Request) {
               },
             }
           );
-          if (supaRes.ok) {
+
+          if (supaRes.status === 202) {
+            // 202 Accepted: AI Whisper audio transcription job queued for uncaptioned video — poll for result
+            const supaData = await supaRes.json();
+            const jobId = supaData.jobId;
+            if (jobId) {
+              // Poll for completion (up to ~75 seconds for AI Whisper audio transcription)
+              for (let attempt = 0; attempt < 30; attempt++) {
+                await new Promise((resolve) => setTimeout(resolve, 2500));
+                const pollRes = await fetch(`https://api.supadata.ai/v1/transcript/${jobId}`, {
+                  headers: {
+                    "x-api-key": supadataKey,
+                    "Content-Type": "application/json",
+                  },
+                });
+                if (pollRes.ok) {
+                  const pollData = await pollRes.json();
+                  if (pollData.status === "completed" && Array.isArray(pollData.content)) {
+                    transcriptChunks = pollData.content;
+                    break;
+                  } else if (pollData.status === "failed") {
+                    console.warn("Supadata AI transcription job failed.");
+                    break;
+                  }
+                }
+              }
+            }
+          } else if (supaRes.ok) {
+            // 200: transcript returned immediately (video has native captions)
             const supaData = await supaRes.json();
             if (Array.isArray(supaData.content) && supaData.content.length > 0) {
               transcriptChunks = supaData.content;
@@ -69,10 +94,12 @@ export async function POST(request: Request) {
           transcriptChunks = await YoutubeTranscript.fetchTranscript(videoId);
         } catch (err) {
           console.error("Transcript error:", err);
+          const supadataConfigured = !!(process.env.SUPADATA_API_KEY && process.env.SUPADATA_API_KEY !== "your_supadata_api_key_here");
           return Response.json(
             {
-              error:
-                "Could not fetch the transcript for this video. YouTube blocks datacenter IPs or captions are disabled. You can paste notes or transcript manually below!",
+              error: supadataConfigured
+                ? "Could not fetch a transcript for this video — captions are disabled and AI audio transcription also failed. Try a different video."
+                : "Could not fetch transcript for this video. Captions may be disabled on YouTube. Set a SUPADATA_API_KEY to enable automatic AI audio transcription for videos without captions.",
             },
             { status: 422 }
           );
@@ -104,7 +131,6 @@ export async function POST(request: Request) {
         }
       }
       timestampedTranscript = timestampedTranscript.trim();
-    }
 
     if (timestampedTranscript.length < 50) {
       return Response.json(
