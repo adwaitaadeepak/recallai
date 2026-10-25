@@ -37,12 +37,13 @@ export async function POST(request: Request) {
       // ── Fetch transcript ──────────────────────────────────────────────────────
       let transcriptChunks: { text: string; offset: number; duration?: number }[] | null = null;
 
-      // 1. Try Supadata API first if API key is configured (bypasses YouTube cloud IP blocks on Vercel)
+      // 1. Try Supadata API first with mode=auto (native captions first, automatic AI Whisper audio fallback if captions missing)
       const supadataKey = process.env.SUPADATA_API_KEY;
       if (supadataKey && supadataKey !== "your_supadata_api_key_here") {
         try {
+          const ytUrl = `https://www.youtube.com/watch?v=${videoId}`;
           const supaRes = await fetch(
-            `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`,
+            `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(ytUrl)}&mode=auto`,
             {
               headers: {
                 "x-api-key": supadataKey,
@@ -50,10 +51,37 @@ export async function POST(request: Request) {
               },
             }
           );
+
           if (supaRes.ok) {
             const supaData = await supaRes.json();
             if (Array.isArray(supaData.content) && supaData.content.length > 0) {
               transcriptChunks = supaData.content;
+            }
+          } else if (supaRes.status === 202) {
+            // 202 Accepted: AI Whisper audio transcription job started for uncaptioned video
+            const supaData = await supaRes.json();
+            const jobId = supaData.jobId;
+            if (jobId) {
+              // Poll for completion (up to ~20 seconds)
+              for (let attempt = 0; attempt < 10; attempt++) {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                const pollRes = await fetch(`https://api.supadata.ai/v1/transcript/${jobId}`, {
+                  headers: {
+                    "x-api-key": supadataKey,
+                    "Content-Type": "application/json",
+                  },
+                });
+                if (pollRes.ok) {
+                  const pollData = await pollRes.json();
+                  if (pollData.status === "completed" && Array.isArray(pollData.content)) {
+                    transcriptChunks = pollData.content;
+                    break;
+                  } else if (pollData.status === "failed") {
+                    console.warn("Supadata AI transcription job failed.");
+                    break;
+                  }
+                }
+              }
             }
           } else {
             console.warn("Supadata API returned status:", supaRes.status);
@@ -72,7 +100,7 @@ export async function POST(request: Request) {
           return Response.json(
             {
               error:
-                "Could not fetch the transcript for this video. YouTube blocks datacenter IPs or captions are disabled. You can paste notes or transcript manually below!",
+                "Could not fetch transcript for this video. Captions may be disabled on YouTube. You can enable automatic AI Whisper audio transcription with a free SUPADATA_API_KEY, or paste notes/transcript manually below!",
             },
             { status: 422 }
           );
