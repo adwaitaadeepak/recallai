@@ -62,9 +62,9 @@ export async function POST(request: Request) {
             const supaData = await supaRes.json();
             const jobId = supaData.jobId;
             if (jobId) {
-              // Poll for completion (up to ~20 seconds)
-              for (let attempt = 0; attempt < 10; attempt++) {
-                await new Promise((resolve) => setTimeout(resolve, 2000));
+              // Poll for completion (up to ~75 seconds for AI Whisper audio transcription)
+              for (let attempt = 0; attempt < 30; attempt++) {
+                await new Promise((resolve) => setTimeout(resolve, 2500));
                 const pollRes = await fetch(`https://api.supadata.ai/v1/transcript/${jobId}`, {
                   headers: {
                     "x-api-key": supadataKey,
