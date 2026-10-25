@@ -24,20 +24,20 @@ export default function HowItWorksSection() {
     <section
       id="how-it-works"
       aria-labelledby="how-heading"
-      style={{ background: "#f8f9fc", padding: "72px 24px" }}
+      style={{ background: "#080c1e", padding: "80px 24px" }}
     >
       <div style={{ maxWidth: 1040, margin: "0 auto" }}>
 
         {/* Header */}
         <div className="text-center" style={{ marginBottom: 48 }}>
           <span
-            className="inline-flex items-center rounded-full text-xs font-semibold"
+            className="inline-flex items-center rounded-full text-xs font-bold font-mono-accent"
             style={{
-              background: "#eef2ff",
-              border: "1px solid #c7d2fe",
-              color: "#4f46e5",
-              padding: "4px 14px",
-              letterSpacing: "0.06em",
+              background: "rgba(92, 82, 255, 0.12)",
+              border: "1px solid rgba(92, 82, 255, 0.35)",
+              color: "#a5b4fc",
+              padding: "5px 16px",
+              letterSpacing: "0.05em",
               textTransform: "uppercase",
               marginBottom: 16,
             }}
@@ -48,15 +48,15 @@ export default function HowItWorksSection() {
             id="how-heading"
             className="font-bold tracking-tight"
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: "clamp(1.6rem, 3vw, 2.1rem)",
-              color: "#111827",
+              fontFamily: "'Unbounded', sans-serif",
+              fontSize: "clamp(1.5rem, 3vw, 2.1rem)",
+              color: "#ffffff",
               marginBottom: 12,
             }}
           >
             Three steps to better retention
           </h2>
-          <p style={{ color: "#6b7280", fontSize: "1rem", maxWidth: 420, margin: "0 auto", lineHeight: 1.6 }}>
+          <p style={{ color: "#94a3b8", fontSize: "1rem", maxWidth: 440, margin: "0 auto", lineHeight: 1.6, fontFamily: "'Nunito', sans-serif" }}>
             From URL to flashcard deck in under 30 seconds. No account. No friction.
           </p>
         </div>
@@ -64,32 +64,34 @@ export default function HowItWorksSection() {
         {/* Steps grid */}
         <div
           className="grid grid-cols-1 md:grid-cols-3"
-          style={{ gap: 16, marginBottom: 48 }}
+          style={{ gap: 18, marginBottom: 48 }}
         >
           {steps.map((step) => (
             <div
               key={step.number}
               style={{
-                background: "#ffffff",
-                border: "1px solid #e5e7eb",
-                borderRadius: 14,
+                background: "rgba(14, 19, 43, 0.7)",
+                backdropFilter: "blur(14px)",
+                border: "1px solid rgba(255, 255, 255, 0.09)",
+                borderRadius: 20,
                 padding: 28,
-                boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
               }}
             >
               {/* Step number circle */}
               <div
                 className="flex items-center justify-center rounded-full font-bold"
                 style={{
-                  width: 36,
-                  height: 36,
-                  background: "#eef2ff",
-                  border: "2px solid #c7d2fe",
-                  color: "#4f46e5",
-                  fontSize: "0.8125rem",
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  marginBottom: 18,
+                  width: 40,
+                  height: 40,
+                  background: "rgba(92, 82, 255, 0.18)",
+                  border: "1.5px solid #5c52ff",
+                  color: "#c7d2fe",
+                  fontSize: "0.875rem",
+                  fontFamily: "'Sometype Mono', monospace",
+                  marginBottom: 20,
                   flexShrink: 0,
+                  boxShadow: "0 0 16px rgba(92, 82, 255, 0.35)",
                 }}
               >
                 {step.number}
@@ -98,18 +100,18 @@ export default function HowItWorksSection() {
               <h3
                 className="font-semibold"
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontSize: "0.9375rem",
-                  color: "#111827",
-                  marginBottom: 8,
+                  fontFamily: "'Unbounded', sans-serif",
+                  fontSize: "0.95rem",
+                  color: "#ffffff",
+                  marginBottom: 10,
                 }}
               >
                 {step.title}
               </h3>
-              <p style={{ color: "#6b7280", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: 12 }}>
+              <p style={{ color: "#94a3b8", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: 14, fontFamily: "'Nunito', sans-serif" }}>
                 {step.description}
               </p>
-              <span style={{ fontSize: "0.8125rem", color: "#4f46e5", fontWeight: 500 }}>
+              <span className="font-mono-accent" style={{ fontSize: "0.75rem", color: "#a5b4fc", fontWeight: 600 }}>
                 {step.note}
               </span>
             </div>
@@ -118,38 +120,46 @@ export default function HowItWorksSection() {
 
         {/* CTA strip */}
         <div
-          className="text-center rounded-2xl"
+          className="text-center rounded-3xl"
           style={{
-            background: "#eef2ff",
-            border: "1px solid #c7d2fe",
-            padding: "48px 32px",
+            background: "radial-gradient(ellipse at 50% 50%, rgba(92, 82, 255, 0.22) 0%, rgba(14, 19, 43, 0.85) 100%)",
+            border: "1px solid rgba(92, 82, 255, 0.35)",
+            boxShadow: "0 24px 60px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(92, 82, 255, 0.15)",
+            padding: "52px 32px",
           }}
         >
           <h3
             className="font-bold"
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: "1.375rem",
-              color: "#111827",
+              fontFamily: "'Unbounded', sans-serif",
+              fontSize: "1.35rem",
+              color: "#ffffff",
               marginBottom: 10,
             }}
           >
             Ready to study smarter?
           </h3>
-          <p style={{ color: "#6b7280", fontSize: "0.9375rem", marginBottom: 24 }}>
+          <p style={{ color: "#94a3b8", fontSize: "0.95rem", marginBottom: 26, fontFamily: "'Nunito', sans-serif" }}>
             Paste any YouTube URL and see RecallAI in action.
           </p>
           <a
             href="#generate"
-            className="inline-flex items-center gap-2 font-semibold text-white rounded-xl no-underline transition-all"
+            className="inline-flex items-center gap-2 font-bold text-white rounded-full no-underline transition-all"
             style={{
-              background: "#4f46e5",
-              padding: "12px 28px",
+              background: "linear-gradient(135deg, #5c52ff 0%, #4338ca 100%)",
+              padding: "13px 32px",
               fontSize: "0.9375rem",
-              boxShadow: "0 2px 8px rgba(79,70,229,0.3)",
+              boxShadow: "0 0 25px rgba(92, 82, 255, 0.45)",
+              fontFamily: "'Nunito', sans-serif",
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#4338ca"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(79,70,229,0.4)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "#4f46e5"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(79,70,229,0.3)"; }}
+            onMouseEnter={e => {
+              e.currentTarget.style.filter = "brightness(1.15)";
+              e.currentTarget.style.boxShadow = "0 0 32px rgba(92, 82, 255, 0.65)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.filter = "none";
+              e.currentTarget.style.boxShadow = "0 0 25px rgba(92, 82, 255, 0.45)";
+            }}
           >
             Generate My First Deck
           </a>

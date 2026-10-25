@@ -115,21 +115,21 @@ export default function FlashcardsSection({
       id="screen-2-studio"
       className="min-h-screen flex flex-col"
       style={{
-        background: "linear-gradient(180deg, #f8f9fc 0%, #eef2ff 100%)",
+        background: "#080c1e",
       }}
     >
       {/* ── SCREEN 2 TOP STUDIO NAVBAR ── */}
       <header
         style={{
-          background: "rgba(255, 255, 255, 0.95)",
-          backdropFilter: "blur(8px)",
-          borderBottom: "1px solid #e5e7eb",
+          background: "rgba(8, 12, 30, 0.92)",
+          backdropFilter: "blur(16px)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
           padding: "0 24px",
           height: 64,
           position: "sticky",
           top: 0,
           zIndex: 40,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          boxShadow: "0 4px 24px -2px rgba(0, 0, 0, 0.4)",
         }}
         className="flex items-center justify-between"
       >
@@ -140,12 +140,12 @@ export default function FlashcardsSection({
             tabIndex={0}
             onClick={onReset}
             onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onReset(); }}
-            className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-85"
+            className="flex items-center gap-2.5 cursor-pointer transition-opacity hover:opacity-85"
             title="Return to setup"
           >
             <div
-              className="flex items-center justify-center rounded-lg"
-              style={{ width: 32, height: 32, background: "#4f46e5" }}
+              className="flex items-center justify-center rounded-xl shadow-lg shadow-indigo-500/20"
+              style={{ width: 32, height: 32, background: "linear-gradient(135deg, #5c52ff 0%, #4338ca 100%)" }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10" />
@@ -154,22 +154,23 @@ export default function FlashcardsSection({
             </div>
             <span
               className="text-base font-bold tracking-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#111827" }}
+              style={{ fontFamily: "'Unbounded', sans-serif", color: "#ffffff", fontSize: "0.95rem" }}
             >
-              Recall<span style={{ color: "#4f46e5" }}>AI</span>
+              Recall<span style={{ color: "#5c52ff" }}>AI</span>
             </span>
           </div>
 
-          <span className="hidden sm:inline" style={{ color: "#d1d5db" }}>|</span>
+          <span className="hidden sm:inline" style={{ color: "rgba(255, 255, 255, 0.2)" }}>|</span>
 
           {/* Mode Pill */}
           <span
-            className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full"
+            className="inline-flex items-center gap-1.5 text-xs font-bold rounded-full font-mono-accent"
             style={{
-              background: "#eef2ff",
-              border: "1px solid #c7d2fe",
-              color: "#4f46e5",
-              padding: "4px 12px",
+              background: "rgba(92, 82, 255, 0.12)",
+              border: "1px solid rgba(92, 82, 255, 0.35)",
+              color: "#a5b4fc",
+              padding: "4px 14px",
+              fontSize: "0.75rem",
             }}
           >
             {mode === "intensive" ? "🧠 Intensive Study" : "⚡ Basic Study"} • {cards.length} cards
@@ -180,19 +181,19 @@ export default function FlashcardsSection({
         <div className="flex items-center gap-2 sm:gap-3">
           {/* View switcher */}
           <div
-            className="inline-flex items-center rounded-xl p-1"
-            style={{ background: "#f3f4f6", border: "1px solid #e5e7eb" }}
+            className="inline-flex items-center rounded-full p-1"
+            style={{ background: "rgba(14, 19, 43, 0.8)", border: "1px solid rgba(255, 255, 255, 0.1)" }}
           >
             <button
               type="button"
               onClick={() => setViewMode("focus")}
-              className="text-xs font-semibold rounded-lg transition-all cursor-pointer"
+              className="text-xs font-bold rounded-full transition-all cursor-pointer"
               style={{
-                padding: "5px 12px",
-                background: viewMode === "focus" ? "#ffffff" : "transparent",
-                color: viewMode === "focus" ? "#111827" : "#6b7280",
-                border: "none",
-                boxShadow: viewMode === "focus" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                padding: "6px 14px",
+                background: viewMode === "focus" ? "rgba(92, 82, 255, 0.35)" : "transparent",
+                color: viewMode === "focus" ? "#ffffff" : "#94a3b8",
+                border: viewMode === "focus" ? "1px solid rgba(92, 82, 255, 0.5)" : "1px solid transparent",
+                boxShadow: viewMode === "focus" ? "0 0 14px rgba(92, 82, 255, 0.4)" : "none",
               }}
             >
               Focus
@@ -200,13 +201,13 @@ export default function FlashcardsSection({
             <button
               type="button"
               onClick={() => setViewMode("grid")}
-              className="text-xs font-semibold rounded-lg transition-all cursor-pointer"
+              className="text-xs font-bold rounded-full transition-all cursor-pointer"
               style={{
-                padding: "5px 12px",
-                background: viewMode === "grid" ? "#ffffff" : "transparent",
-                color: viewMode === "grid" ? "#111827" : "#6b7280",
-                border: "none",
-                boxShadow: viewMode === "grid" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                padding: "6px 14px",
+                background: viewMode === "grid" ? "rgba(92, 82, 255, 0.35)" : "transparent",
+                color: viewMode === "grid" ? "#ffffff" : "#94a3b8",
+                border: viewMode === "grid" ? "1px solid rgba(92, 82, 255, 0.5)" : "1px solid transparent",
+                boxShadow: viewMode === "grid" ? "0 0 14px rgba(92, 82, 255, 0.4)" : "none",
               }}
             >
               Grid
@@ -218,20 +219,22 @@ export default function FlashcardsSection({
             id="return-to-setup-btn"
             type="button"
             onClick={onReset}
-            className="inline-flex items-center gap-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs font-bold rounded-full transition-all cursor-pointer"
             style={{
-              background: "#ffffff",
-              border: "1.5px solid #d1d5db",
-              color: "#374151",
-              padding: "7px 14px",
+              background: "rgba(255, 255, 255, 0.06)",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
+              color: "#ffffff",
+              padding: "8px 16px",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#4f46e5";
-              e.currentTarget.style.color = "#4f46e5";
+              e.currentTarget.style.borderColor = "#5c52ff";
+              e.currentTarget.style.background = "rgba(92, 82, 255, 0.2)";
+              e.currentTarget.style.boxShadow = "0 0 16px rgba(92, 82, 255, 0.3)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "#d1d5db";
-              e.currentTarget.style.color = "#374151";
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.12)";
+              e.currentTarget.style.background = "rgba(255, 255, 255, 0.06)";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -260,10 +263,11 @@ export default function FlashcardsSection({
             <div
               id="study-video-player"
               style={{
-                background: "#000000",
-                borderRadius: 16,
+                background: "#050814",
+                borderRadius: 20,
                 overflow: "hidden",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+                boxShadow: "0 24px 60px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(92, 82, 255, 0.15)",
                 position: "relative",
                 paddingTop: "56.25%", // 16:9 ratio
                 width: "100%",
@@ -289,7 +293,7 @@ export default function FlashcardsSection({
               ) : (
                 <div
                   className="absolute inset-0 flex items-center justify-center"
-                  style={{ color: "#9ca3af", fontSize: "0.9375rem" }}
+                  style={{ color: "#94a3b8", fontSize: "0.9375rem", fontFamily: "'Nunito', sans-serif" }}
                 >
                   No video selected
                 </div>
@@ -298,25 +302,29 @@ export default function FlashcardsSection({
 
             {/* Video player toolbar */}
             <div
-              className="flex items-center justify-between rounded-xl"
+              className="flex items-center justify-between rounded-2xl"
               style={{
-                background: "#ffffff",
-                border: "1px solid #e5e7eb",
-                padding: "12px 18px",
+                background: "rgba(14, 19, 43, 0.85)",
+                backdropFilter: "blur(16px)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                padding: "14px 20px",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
               }}
             >
-              <div className="flex items-center gap-2" style={{ fontSize: "0.8125rem", color: "#4b5563" }}>
+              <div className="flex items-center gap-2" style={{ fontSize: "0.8125rem", color: "#94a3b8", fontFamily: "'Nunito', sans-serif" }}>
                 <span style={{ fontSize: "1rem" }}>💡</span>
                 <span>
-                  Click any card&apos;s <strong style={{ color: "#4f46e5" }}>⏱️ timestamp</strong> to jump to that moment in the video.
+                  Click any card&apos;s <strong className="font-mono-accent" style={{ color: "#a5b4fc" }}>⏱️ timestamp</strong> to jump to that moment in the video.
                 </span>
               </div>
               <a
                 href={externalVideoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-semibold text-xs transition-colors shrink-0"
-                style={{ color: "#4f46e5", textDecoration: "none" }}
+                className="inline-flex items-center gap-1.5 font-bold text-xs transition-colors shrink-0"
+                style={{ color: "#a5b4fc", textDecoration: "none", fontFamily: "'Nunito', sans-serif" }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#ffffff"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#a5b4fc"; }}
               >
                 <span>Watch on YouTube</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -334,10 +342,11 @@ export default function FlashcardsSection({
               /* ── FOCUS MODE: Single Card Player with Prev/Next ── */
               <div
                 style={{
-                  background: "#ffffff",
-                  borderRadius: 16,
-                  border: "1.5px solid #e5e7eb",
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+                  background: "rgba(14, 19, 43, 0.88)",
+                  backdropFilter: "blur(20px)",
+                  borderRadius: 24,
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  boxShadow: "0 24px 60px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(92, 82, 255, 0.12)",
                   padding: 24,
                 }}
               >
@@ -346,23 +355,26 @@ export default function FlashcardsSection({
                   <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
                     <div className="flex items-center gap-2">
                       <span
-                        className="font-bold text-xs uppercase tracking-wider rounded-md"
+                        className="font-bold text-xs uppercase tracking-wider rounded-full font-mono-accent"
                         style={{
-                          background: "#eef2ff",
-                          color: "#4f46e5",
-                          padding: "2px 8px",
+                          background: "rgba(92, 82, 255, 0.15)",
+                          border: "1px solid rgba(92, 82, 255, 0.35)",
+                          color: "#a5b4fc",
+                          padding: "3px 10px",
+                          fontSize: "0.72rem",
                         }}
                       >
                         Card {currentIndex + 1} of {cards.length}
                       </span>
                       {currentCard?.topic && (
                         <span
-                          className="text-xs font-medium truncate max-w-[170px]"
+                          className="text-xs font-semibold truncate max-w-[170px] rounded-full"
                           style={{
-                            color: "#6b7280",
-                            background: "#f3f4f6",
-                            padding: "2px 8px",
-                            borderRadius: 6,
+                            color: "#cbd5e1",
+                            background: "rgba(255, 255, 255, 0.06)",
+                            border: "1px solid rgba(255, 255, 255, 0.08)",
+                            padding: "3px 10px",
+                            fontFamily: "'Nunito', sans-serif",
                           }}
                         >
                           {currentCard.topic}
@@ -376,18 +388,19 @@ export default function FlashcardsSection({
                         type="button"
                         onClick={() => handleSeek(currentCard.timestampSeconds)}
                         title="Jump to video timestamp"
-                        className="inline-flex items-center gap-1 text-xs font-semibold rounded-md transition-all cursor-pointer"
+                        className="inline-flex items-center gap-1 text-xs font-semibold rounded-full transition-all cursor-pointer font-mono-accent"
                         style={{
-                          background: "#fef3c7",
-                          color: "#92400e",
-                          border: "1px solid #fde68a",
-                          padding: "3px 8px",
+                          background: "rgba(245, 158, 11, 0.15)",
+                          color: "#fcd34d",
+                          border: "1px solid rgba(245, 158, 11, 0.35)",
+                          padding: "3px 10px",
+                          fontSize: "0.72rem",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "#fde68a";
+                          e.currentTarget.style.background = "rgba(245, 158, 11, 0.28)";
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "#fef3c7";
+                          e.currentTarget.style.background = "rgba(245, 158, 11, 0.15)";
                         }}
                       >
                         <span>⏱️ {currentCard.timestamp}</span>
@@ -399,8 +412,8 @@ export default function FlashcardsSection({
                   {/* Smooth Progress Bar */}
                   <div
                     style={{
-                      height: 5,
-                      background: "#f3f4f6",
+                      height: 6,
+                      background: "rgba(255, 255, 255, 0.08)",
                       borderRadius: 999,
                       overflow: "hidden",
                     }}
@@ -409,14 +422,15 @@ export default function FlashcardsSection({
                       style={{
                         height: "100%",
                         width: `${((currentIndex + 1) / cards.length) * 100}%`,
-                        background: "linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%)",
+                        background: "linear-gradient(90deg, #5c52ff 0%, #a855f7 100%)",
+                        boxShadow: "0 0 12px rgba(92, 82, 255, 0.5)",
                         transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
                     />
                   </div>
                 </div>
 
-                {/* Interactive Flip Card Container with NO TEXT BLEEDING */}
+                {/* Interactive Flip Card Container */}
                 <div
                   role="button"
                   tabIndex={0}
@@ -445,7 +459,7 @@ export default function FlashcardsSection({
                       transformStyle: "preserve-3d",
                       transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
                       transition: "transform 0.45s cubic-bezier(0.4, 0.2, 0.2, 1)",
-                      borderRadius: 14,
+                      borderRadius: 20,
                       position: "relative",
                     }}
                   >
@@ -456,11 +470,11 @@ export default function FlashcardsSection({
                         inset: 0,
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
-                        borderRadius: 14,
-                        background: "#ffffff",
-                        border: "2px solid #e0e7ff",
-                        boxShadow: "0 4px 16px rgba(79,70,229,0.08)",
-                        padding: "24px 22px",
+                        borderRadius: 20,
+                        background: "linear-gradient(145deg, rgba(20, 27, 60, 0.95) 0%, rgba(14, 19, 43, 0.98) 100%)",
+                        border: "1.5px solid rgba(92, 82, 255, 0.28)",
+                        boxShadow: "0 12px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+                        padding: "26px 24px",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "space-between",
@@ -471,16 +485,19 @@ export default function FlashcardsSection({
                     >
                       <div className="flex items-center justify-between" style={{ marginBottom: 14 }}>
                         <span
-                          className="font-bold text-xs rounded-full"
+                          className="font-bold text-xs rounded-full font-mono-accent"
                           style={{
-                            background: "#eef2ff",
-                            color: "#4f46e5",
-                            padding: "3px 10px",
+                            background: "rgba(92, 82, 255, 0.2)",
+                            border: "1px solid rgba(92, 82, 255, 0.4)",
+                            color: "#a5b4fc",
+                            padding: "3px 12px",
+                            letterSpacing: "0.04em",
+                            textTransform: "uppercase",
                           }}
                         >
                           Question
                         </span>
-                        <span style={{ fontSize: "0.75rem", color: "#9ca3af" }}>
+                        <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontFamily: "'Nunito', sans-serif" }}>
                           Tap card to reveal answer ⟲
                         </span>
                       </div>
@@ -498,11 +515,11 @@ export default function FlashcardsSection({
                       >
                         <p
                           style={{
-                            fontFamily: "'Space Grotesk', sans-serif",
-                            fontSize: "1.0625rem",
-                            fontWeight: 600,
-                            color: "#111827",
-                            lineHeight: 1.5,
+                            fontFamily: "'Nunito', sans-serif",
+                            fontSize: "1.125rem",
+                            fontWeight: 700,
+                            color: "#ffffff",
+                            lineHeight: 1.55,
                           }}
                         >
                           {currentCard.question}
@@ -515,19 +532,20 @@ export default function FlashcardsSection({
                         style={{
                           marginTop: 16,
                           paddingTop: 12,
-                          borderTop: "1px solid #f3f4f6",
+                          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
                           fontSize: "0.75rem",
-                          color: "#9ca3af",
+                          color: "#94a3b8",
+                          fontFamily: "'Nunito', sans-serif",
                         }}
                       >
-                        <span>Card {currentIndex + 1} of {cards.length}</span>
-                        <span className="font-medium" style={{ color: "#4f46e5" }}>
+                        <span className="font-mono-accent">Card {currentIndex + 1} / {cards.length}</span>
+                        <span className="font-bold" style={{ color: "#a5b4fc" }}>
                           Click to Flip →
                         </span>
                       </div>
                     </div>
 
-                    {/* Back Face (Answer) - Fully scrollable, ZERO bleeding */}
+                    {/* Back Face (Answer) */}
                     <div
                       style={{
                         position: isFlipped ? "relative" : "absolute",
@@ -535,10 +553,11 @@ export default function FlashcardsSection({
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
                         transform: "rotateY(180deg)",
-                        borderRadius: 14,
-                        background: "linear-gradient(145deg, #3730a3 0%, #4f46e5 100%)",
-                        boxShadow: "0 6px 20px rgba(79,70,229,0.25)",
-                        padding: "24px 22px",
+                        borderRadius: 20,
+                        background: "linear-gradient(145deg, #18153d 0%, #292468 50%, #4338ca 100%)",
+                        border: "1.5px solid rgba(92, 82, 255, 0.55)",
+                        boxShadow: "0 16px 40px rgba(92, 82, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
+                        padding: "26px 24px",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "space-between",
@@ -549,11 +568,13 @@ export default function FlashcardsSection({
                     >
                       <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
                         <span
-                          className="font-bold text-xs rounded-full"
+                          className="font-bold text-xs rounded-full font-mono-accent"
                           style={{
-                            background: "rgba(255,255,255,0.18)",
+                            background: "rgba(255, 255, 255, 0.22)",
                             color: "#ffffff",
-                            padding: "3px 10px",
+                            padding: "3px 12px",
+                            letterSpacing: "0.04em",
+                            textTransform: "uppercase",
                           }}
                         >
                           Answer
@@ -565,20 +586,20 @@ export default function FlashcardsSection({
                               e.stopPropagation();
                               handleSeek(currentCard.timestampSeconds);
                             }}
-                            className="inline-flex items-center gap-1 text-xs font-semibold rounded-md transition-all cursor-pointer"
+                            className="inline-flex items-center gap-1 text-xs font-semibold rounded-full transition-all cursor-pointer font-mono-accent"
                             style={{
-                              background: "rgba(255,255,255,0.22)",
+                              background: "rgba(255, 255, 255, 0.22)",
                               color: "#ffffff",
                               border: "none",
-                              padding: "3px 8px",
+                              padding: "3px 10px",
                             }}
                           >
-                            ⏱️ Replay video at {currentCard.timestamp}
+                            ⏱️ Replay at {currentCard.timestamp}
                           </button>
                         )}
                       </div>
 
-                      {/* Answer Text - Safe scrollable container */}
+                      {/* Answer Text */}
                       <div
                         style={{
                           flex: 1,
@@ -591,10 +612,11 @@ export default function FlashcardsSection({
                       >
                         <p
                           style={{
-                            fontSize: "0.9375rem",
+                            fontSize: "0.95rem",
                             color: "#ffffff",
-                            lineHeight: 1.6,
-                            fontWeight: 400,
+                            lineHeight: 1.65,
+                            fontWeight: 500,
+                            fontFamily: "'Nunito', sans-serif",
                           }}
                         >
                           {currentCard.answer}
@@ -607,13 +629,14 @@ export default function FlashcardsSection({
                         style={{
                           marginTop: 16,
                           paddingTop: 12,
-                          borderTop: "1px solid rgba(255,255,255,0.15)",
+                          borderTop: "1px solid rgba(255, 255, 255, 0.18)",
                           fontSize: "0.75rem",
-                          color: "rgba(255,255,255,0.7)",
+                          color: "rgba(255, 255, 255, 0.75)",
+                          fontFamily: "'Nunito', sans-serif",
                         }}
                       >
                         <span>Explanation</span>
-                        <span style={{ color: "#ffffff", fontWeight: 500 }}>
+                        <span style={{ color: "#ffffff", fontWeight: 700 }}>
                           Tap to view question ⟲
                         </span>
                       </div>
@@ -624,19 +647,20 @@ export default function FlashcardsSection({
                 {/* Card Navigation Controls */}
                 <div
                   className="flex items-center justify-between gap-2"
-                  style={{ marginTop: 20 }}
+                  style={{ marginTop: 22 }}
                 >
                   <button
                     type="button"
                     onClick={handlePrev}
                     disabled={currentIndex === 0}
-                    className="inline-flex items-center gap-1.5 font-semibold text-xs rounded-xl transition-all"
+                    className="inline-flex items-center gap-1.5 font-bold text-xs rounded-full transition-all"
                     style={{
-                      padding: "10px 16px",
-                      background: currentIndex === 0 ? "#f3f4f6" : "#ffffff",
-                      border: "1.5px solid #e5e7eb",
-                      color: currentIndex === 0 ? "#9ca3af" : "#374151",
+                      padding: "10px 18px",
+                      background: currentIndex === 0 ? "rgba(255, 255, 255, 0.03)" : "rgba(255, 255, 255, 0.08)",
+                      border: "1px solid " + (currentIndex === 0 ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.14)"),
+                      color: currentIndex === 0 ? "#475569" : "#ffffff",
                       cursor: currentIndex === 0 ? "not-allowed" : "pointer",
+                      fontFamily: "'Nunito', sans-serif",
                     }}
                   >
                     ← Previous
@@ -645,20 +669,23 @@ export default function FlashcardsSection({
                   <button
                     type="button"
                     onClick={toggleFlip}
-                    className="inline-flex items-center gap-1.5 font-semibold text-xs rounded-xl transition-all"
+                    className="inline-flex items-center gap-1.5 font-bold text-xs rounded-full transition-all shadow-md"
                     style={{
-                      padding: "10px 20px",
-                      background: "#4f46e5",
+                      padding: "11px 24px",
+                      background: "linear-gradient(135deg, #5c52ff 0%, #4338ca 100%)",
                       color: "#ffffff",
                       border: "none",
                       cursor: "pointer",
-                      boxShadow: "0 2px 8px rgba(79,70,229,0.25)",
+                      boxShadow: "0 0 24px rgba(92, 82, 255, 0.45)",
+                      fontFamily: "'Nunito', sans-serif",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#4338ca";
+                      e.currentTarget.style.filter = "brightness(1.15)";
+                      e.currentTarget.style.boxShadow = "0 0 30px rgba(92, 82, 255, 0.65)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "#4f46e5";
+                      e.currentTarget.style.filter = "none";
+                      e.currentTarget.style.boxShadow = "0 0 24px rgba(92, 82, 255, 0.45)";
                     }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -674,13 +701,14 @@ export default function FlashcardsSection({
                     type="button"
                     onClick={handleNext}
                     disabled={currentIndex === cards.length - 1}
-                    className="inline-flex items-center gap-1.5 font-semibold text-xs rounded-xl transition-all"
+                    className="inline-flex items-center gap-1.5 font-bold text-xs rounded-full transition-all"
                     style={{
-                      padding: "10px 16px",
-                      background: currentIndex === cards.length - 1 ? "#f3f4f6" : "#ffffff",
-                      border: "1.5px solid #e5e7eb",
-                      color: currentIndex === cards.length - 1 ? "#9ca3af" : "#374151",
+                      padding: "10px 18px",
+                      background: currentIndex === cards.length - 1 ? "rgba(255, 255, 255, 0.03)" : "rgba(255, 255, 255, 0.08)",
+                      border: "1px solid " + (currentIndex === cards.length - 1 ? "rgba(255, 255, 255, 0.05)" : "rgba(255, 255, 255, 0.14)"),
+                      color: currentIndex === cards.length - 1 ? "#475569" : "#ffffff",
                       cursor: currentIndex === cards.length - 1 ? "not-allowed" : "pointer",
+                      fontFamily: "'Nunito', sans-serif",
                     }}
                   >
                     Next →
@@ -690,13 +718,15 @@ export default function FlashcardsSection({
                 {/* Sub-actions (Shuffle, etc.) */}
                 <div
                   className="flex items-center justify-center gap-4"
-                  style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #f3f4f6" }}
+                  style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid rgba(255, 255, 255, 0.08)" }}
                 >
                   <button
                     type="button"
                     onClick={handleShuffle}
-                    className="text-xs font-semibold text-gray-500 hover:text-indigo-600 transition-colors inline-flex items-center gap-1 cursor-pointer"
-                    style={{ background: "none", border: "none" }}
+                    className="text-xs font-semibold transition-colors inline-flex items-center gap-1 cursor-pointer"
+                    style={{ background: "none", border: "none", color: "#94a3b8" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "#ffffff"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "#94a3b8"; }}
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <polyline points="16 3 21 3 21 8" />
@@ -707,15 +737,17 @@ export default function FlashcardsSection({
                     </svg>
                     Shuffle Deck
                   </button>
-                  <span style={{ color: "#d1d5db" }}>•</span>
+                  <span style={{ color: "rgba(255, 255, 255, 0.2)" }}>•</span>
                   <button
                     type="button"
                     onClick={() => {
                       setCurrentIndex(0);
                       setIsFlipped(false);
                     }}
-                    className="text-xs font-semibold text-gray-500 hover:text-indigo-600 transition-colors inline-flex items-center gap-1 cursor-pointer"
-                    style={{ background: "none", border: "none" }}
+                    className="text-xs font-semibold transition-colors inline-flex items-center gap-1 cursor-pointer"
+                    style={{ background: "none", border: "none", color: "#94a3b8" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "#ffffff"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "#94a3b8"; }}
                   >
                     Restart from Card 1
                   </button>
@@ -724,17 +756,19 @@ export default function FlashcardsSection({
             ) : (
               /* ── GRID MODE: All Cards with Safe Overflow ── */
               <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
-                  <span className="text-xs font-semibold" style={{ color: "#4b5563" }}>
+                <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
+                  <span className="text-xs font-bold" style={{ color: "#94a3b8", fontFamily: "'Nunito', sans-serif" }}>
                     Showing all {cards.length} cards
                   </span>
                   <button
                     type="button"
                     onClick={toggleFlipAllGrid}
-                    className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 underline cursor-pointer"
-                    style={{ background: "none", border: "none" }}
+                    className="text-xs font-bold transition-colors cursor-pointer"
+                    style={{ background: "none", border: "none", color: "#a5b4fc", fontFamily: "'Nunito', sans-serif" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "#ffffff"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "#a5b4fc"; }}
                   >
-                    Flip All Answers
+                    Flip All Answers ⟲
                   </button>
                 </div>
 
@@ -754,23 +788,24 @@ export default function FlashcardsSection({
                           if (e.key === "Enter" || e.key === " ") toggleGridCard(idx);
                         }}
                         style={{
-                          background: flipped ? "#312e81" : "#ffffff",
-                          border: `1.5px solid ${flipped ? "#4f46e5" : "#e5e7eb"}`,
-                          borderRadius: 12,
-                          padding: "16px 18px",
+                          background: flipped ? "linear-gradient(145deg, #18153d 0%, #292468 100%)" : "rgba(14, 19, 43, 0.85)",
+                          border: `1.5px solid ${flipped ? "#5c52ff" : "rgba(255, 255, 255, 0.1)"}`,
+                          borderRadius: 18,
+                          padding: "18px 20px",
                           cursor: "pointer",
+                          boxShadow: flipped ? "0 0 20px rgba(92, 82, 255, 0.25)" : "0 8px 24px rgba(0, 0, 0, 0.3)",
                           transition: "all 0.2s ease",
                           overflowWrap: "break-word",
                           wordBreak: "break-word",
                         }}
                       >
-                        <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
+                        <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
                           <span
-                            className="text-xs font-bold rounded-md"
+                            className="text-xs font-bold rounded-full font-mono-accent"
                             style={{
-                              background: flipped ? "rgba(255,255,255,0.2)" : "#eef2ff",
-                              color: flipped ? "#ffffff" : "#4f46e5",
-                              padding: "2px 8px",
+                              background: flipped ? "rgba(255,255,255,0.2)" : "rgba(92, 82, 255, 0.15)",
+                              color: flipped ? "#ffffff" : "#a5b4fc",
+                              padding: "2px 10px",
                             }}
                           >
                             Card {idx + 1}
@@ -782,12 +817,12 @@ export default function FlashcardsSection({
                                 e.stopPropagation();
                                 handleSeek(card.timestampSeconds);
                               }}
-                              className="text-xs font-semibold rounded"
+                              className="text-xs font-semibold rounded-full font-mono-accent"
                               style={{
-                                background: flipped ? "rgba(255,255,255,0.15)" : "#fef3c7",
-                                color: flipped ? "#fde68a" : "#92400e",
-                                border: "none",
-                                padding: "2px 6px",
+                                background: flipped ? "rgba(255,255,255,0.15)" : "rgba(245, 158, 11, 0.15)",
+                                color: flipped ? "#fde68a" : "#fcd34d",
+                                border: "1px solid rgba(245, 158, 11, 0.3)",
+                                padding: "2px 8px",
                                 cursor: "pointer",
                               }}
                             >
@@ -798,10 +833,11 @@ export default function FlashcardsSection({
 
                         <p
                           style={{
-                            fontSize: "0.875rem",
-                            fontWeight: flipped ? 400 : 600,
-                            color: flipped ? "#ffffff" : "#111827",
-                            lineHeight: 1.5,
+                            fontSize: "0.9375rem",
+                            fontWeight: flipped ? 500 : 700,
+                            color: "#ffffff",
+                            lineHeight: 1.55,
+                            fontFamily: "'Nunito', sans-serif",
                           }}
                         >
                           {flipped ? card.answer : card.question}
@@ -809,9 +845,10 @@ export default function FlashcardsSection({
                         <span
                           style={{
                             fontSize: "0.75rem",
-                            color: flipped ? "rgba(255,255,255,0.6)" : "#9ca3af",
-                            marginTop: 8,
+                            color: flipped ? "rgba(255,255,255,0.65)" : "#94a3b8",
+                            marginTop: 10,
                             display: "block",
+                            fontFamily: "'Nunito', sans-serif",
                           }}
                         >
                           {flipped ? "Tap to view question" : "Tap to reveal answer"}

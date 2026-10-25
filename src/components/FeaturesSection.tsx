@@ -48,20 +48,20 @@ export default function FeaturesSection() {
     <section
       id="features"
       aria-labelledby="features-heading"
-      style={{ background: "#ffffff", padding: "72px 24px" }}
+      style={{ background: "#0b1026", padding: "80px 24px" }}
     >
       <div style={{ maxWidth: 1040, margin: "0 auto" }}>
 
         {/* Header */}
         <div className="text-center" style={{ marginBottom: 48 }}>
           <span
-            className="inline-flex items-center rounded-full text-xs font-semibold"
+            className="inline-flex items-center rounded-full text-xs font-bold font-mono-accent"
             style={{
-              background: "#eef2ff",
-              border: "1px solid #c7d2fe",
-              color: "#4f46e5",
-              padding: "4px 14px",
-              letterSpacing: "0.06em",
+              background: "rgba(92, 82, 255, 0.12)",
+              border: "1px solid rgba(92, 82, 255, 0.35)",
+              color: "#a5b4fc",
+              padding: "5px 16px",
+              letterSpacing: "0.05em",
               textTransform: "uppercase",
               marginBottom: 16,
             }}
@@ -72,15 +72,15 @@ export default function FeaturesSection() {
             id="features-heading"
             className="font-bold tracking-tight"
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: "clamp(1.6rem, 3vw, 2.1rem)",
-              color: "#111827",
+              fontFamily: "'Unbounded', sans-serif",
+              fontSize: "clamp(1.5rem, 3vw, 2.1rem)",
+              color: "#ffffff",
               marginBottom: 12,
             }}
           >
             Everything you need to learn smarter
           </h2>
-          <p style={{ color: "#6b7280", fontSize: "1rem", maxWidth: 480, margin: "0 auto", lineHeight: 1.6 }}>
+          <p style={{ color: "#94a3b8", fontSize: "1rem", maxWidth: 500, margin: "0 auto", lineHeight: 1.6, fontFamily: "'Nunito', sans-serif" }}>
             RecallAI handles the heavy lifting so you can focus on understanding — not note-taking.
           </p>
         </div>
@@ -88,40 +88,42 @@ export default function FeaturesSection() {
         {/* Grid */}
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-          style={{ gap: 16 }}
+          style={{ gap: 18 }}
         >
           {features.map((feat) => (
             <div
               key={feat.title}
               className="transition-all duration-200"
               style={{
-                background: "#ffffff",
-                border: "1px solid #e5e7eb",
-                borderRadius: 14,
-                padding: 24,
-                boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                background: "rgba(14, 19, 43, 0.7)",
+                backdropFilter: "blur(14px)",
+                border: "1px solid rgba(255, 255, 255, 0.09)",
+                borderRadius: 20,
+                padding: 26,
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
                 cursor: "default",
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 20px rgba(79,70,229,0.1)";
-                (e.currentTarget as HTMLDivElement).style.borderColor = "#c7d2fe";
-                (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
+                (e.currentTarget as HTMLDivElement).style.boxShadow = "0 12px 36px rgba(92, 82, 255, 0.22)";
+                (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(92, 82, 255, 0.4)";
+                (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)";
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 3px rgba(0,0,0,0.05)";
-                (e.currentTarget as HTMLDivElement).style.borderColor = "#e5e7eb";
+                (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(0, 0, 0, 0.3)";
+                (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255, 255, 255, 0.09)";
                 (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
               }}
             >
               {/* Icon box */}
               <div
-                className="flex items-center justify-center rounded-xl"
+                className="flex items-center justify-center rounded-2xl"
                 style={{
-                  width: 44,
-                  height: 44,
-                  background: feat.accentBg,
-                  fontSize: 20,
-                  marginBottom: 14,
+                  width: 48,
+                  height: 48,
+                  background: "rgba(92, 82, 255, 0.12)",
+                  border: "1px solid rgba(92, 82, 255, 0.25)",
+                  fontSize: 22,
+                  marginBottom: 16,
                 }}
                 aria-hidden="true"
               >
@@ -131,15 +133,15 @@ export default function FeaturesSection() {
               <h3
                 className="font-semibold"
                 style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontSize: "0.9375rem",
-                  color: "#111827",
+                  fontFamily: "'Unbounded', sans-serif",
+                  fontSize: "0.95rem",
+                  color: "#ffffff",
                   marginBottom: 8,
                 }}
               >
                 {feat.title}
               </h3>
-              <p style={{ color: "#6b7280", fontSize: "0.875rem", lineHeight: 1.6 }}>
+              <p style={{ color: "#94a3b8", fontSize: "0.875rem", lineHeight: 1.6, fontFamily: "'Nunito', sans-serif" }}>
                 {feat.description}
               </p>
             </div>

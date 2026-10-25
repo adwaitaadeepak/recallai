@@ -1,16 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Sometype+Mono:wght@400;500;600;700&family=Unbounded:wght@500;600;700;800&display=swap');
 
 @import "tailwindcss";
 
+:root {
+  --font-unbounded: 'Unbounded', sans-serif;
+  --font-nunito: 'Nunito', sans-serif;
+  --font-mono-accent: 'Sometype Mono', monospace;
+  --clr-bg: #080c1e;
+  --clr-card: rgba(17, 23, 49, 0.85);
+  --clr-border: rgba(255, 255, 255, 0.1);
+  --clr-primary: #5c52ff;
+  --clr-primary-hover: #4e44e6;
+  --clr-violet: #7c3aed;
+  --clr-text-main: #ffffff;
+  --clr-text-muted: #94a3b8;
+  --clr-text-subtle: #64748b;
+  --clr-dark: #050814;
+}
+
 html {
   scroll-behavior: smooth;
+  background-color: #080c1e;
 }
 
 body {
-  background-color: #f8f9fc !important;
-  color: #111827 !important;
-  font-family: 'Inter', sans-serif !important;
+  background-color: #080c1e !important;
+  color: #ffffff !important;
+  font-family: 'Nunito', sans-serif !important;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Unbounded', sans-serif !important;
+  letter-spacing: -0.02em;
+}
+
+.font-mono-accent {
+  font-family: 'Sometype Mono', monospace !important;
 }
 
 /* Spinner */
@@ -32,6 +58,6 @@ body {
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #f8f9fc; }
-::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #4f46e5; }
+::-webkit-scrollbar-track { background: #080c1e; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #5c52ff; }

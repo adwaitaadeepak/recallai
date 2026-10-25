@@ -46,26 +46,26 @@ export default function HeroSection({
       id="generate"
       aria-labelledby="hero-headline"
       style={{
-        background: "linear-gradient(180deg, #eef2ff 0%, #f8f9fc 100%)",
-        paddingTop: 100,
-        paddingBottom: 72,
+        background: "radial-gradient(ellipse 80% 60% at 50% -15%, rgba(92, 82, 255, 0.28), rgba(8, 12, 30, 0)), #080c1e",
+        paddingTop: 104,
+        paddingBottom: 76,
         paddingLeft: 24,
         paddingRight: 24,
       }}
     >
       {/* ── Center column ── */}
-      <div style={{ maxWidth: 640, margin: "0 auto" }}>
+      <div style={{ maxWidth: 660, margin: "0 auto" }}>
 
         {/* Label pill */}
         <div className="flex justify-center" style={{ marginBottom: 20 }}>
           <span
-            className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full"
+            className="inline-flex items-center gap-2 text-xs font-bold rounded-full font-mono-accent"
             style={{
-              background: "#eef2ff",
-              border: "1px solid #c7d2fe",
-              color: "#4f46e5",
-              padding: "4px 14px",
-              letterSpacing: "0.06em",
+              background: "rgba(92, 82, 255, 0.12)",
+              border: "1px solid rgba(92, 82, 255, 0.35)",
+              color: "#a5b4fc",
+              padding: "5px 16px",
+              letterSpacing: "0.05em",
               textTransform: "uppercase",
             }}
           >
@@ -81,15 +81,19 @@ export default function HeroSection({
           id="hero-headline"
           className="text-center font-bold leading-tight tracking-tight"
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: "clamp(2.2rem, 5vw, 3.25rem)",
-            color: "#111827",
+            fontFamily: "'Unbounded', sans-serif",
+            fontSize: "clamp(2rem, 4.5vw, 2.85rem)",
+            color: "#ffffff",
             marginBottom: 16,
-            lineHeight: 1.18,
+            lineHeight: 1.22,
           }}
         >
           Watch Less.{" "}
-          <span style={{ color: "#4f46e5" }}>Remember More.</span>
+          <span style={{
+            background: "linear-gradient(135deg, #a5b4fc 0%, #c084fc 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}>Remember More.</span>
         </h1>
 
         {/* Sub-headline */}
@@ -97,11 +101,12 @@ export default function HeroSection({
           className="text-center leading-relaxed"
           style={{
             fontSize: "1.0625rem",
-            color: "#6b7280",
-            marginBottom: 40,
-            maxWidth: 500,
+            color: "#94a3b8",
+            marginBottom: 36,
+            maxWidth: 520,
             marginLeft: "auto",
             marginRight: "auto",
+            fontFamily: "'Nunito', sans-serif",
           }}
         >
           Paste a YouTube URL and RecallAI turns the video into
@@ -111,31 +116,33 @@ export default function HeroSection({
         {/* ── Generate card ── */}
         <div
           style={{
-            background: "#ffffff",
-            border: "1px solid #e5e7eb",
-            borderRadius: 16,
-            boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06)",
-            padding: 28,
+            background: "rgba(14, 19, 43, 0.88)",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255, 255, 255, 0.12)",
+            borderRadius: 24,
+            boxShadow: "0 24px 60px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(92, 82, 255, 0.12)",
+            padding: 30,
           }}
         >
           {/* Source Mode Tabs */}
           <div
-            className="flex items-center rounded-xl p-1"
+            className="flex items-center rounded-xl p-1.5"
             style={{
-              background: "#f3f4f6",
+              background: "rgba(8, 12, 30, 0.8)",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
               marginBottom: 20,
-              gap: 4,
+              gap: 6,
             }}
           >
             <button
               type="button"
               onClick={() => { setInputTab("url"); setError(""); }}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-bold transition-all"
               style={{
-                background: inputTab === "url" ? "#ffffff" : "transparent",
-                color: inputTab === "url" ? "#111827" : "#6b7280",
-                boxShadow: inputTab === "url" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-                border: "none",
+                background: inputTab === "url" ? "rgba(92, 82, 255, 0.28)" : "transparent",
+                color: inputTab === "url" ? "#ffffff" : "#94a3b8",
+                border: inputTab === "url" ? "1px solid rgba(92, 82, 255, 0.45)" : "1px solid transparent",
+                boxShadow: inputTab === "url" ? "0 0 16px rgba(92, 82, 255, 0.3)" : "none",
                 cursor: "pointer",
               }}
             >
@@ -144,12 +151,12 @@ export default function HeroSection({
             <button
               type="button"
               onClick={() => { setInputTab("notes"); setError(""); }}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-bold transition-all"
               style={{
-                background: inputTab === "notes" ? "#ffffff" : "transparent",
-                color: inputTab === "notes" ? "#111827" : "#6b7280",
-                boxShadow: inputTab === "notes" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-                border: "none",
+                background: inputTab === "notes" ? "rgba(92, 82, 255, 0.28)" : "transparent",
+                color: inputTab === "notes" ? "#ffffff" : "#94a3b8",
+                border: inputTab === "notes" ? "1px solid rgba(92, 82, 255, 0.45)" : "1px solid transparent",
+                boxShadow: inputTab === "notes" ? "0 0 16px rgba(92, 82, 255, 0.3)" : "none",
                 cursor: "pointer",
               }}
             >
@@ -163,13 +170,13 @@ export default function HeroSection({
               <label
                 htmlFor="youtube-url-input"
                 className="block text-sm font-semibold"
-                style={{ color: "#374151", marginBottom: 8 }}
+                style={{ color: "#e2e8f0", marginBottom: 8 }}
               >
                 YouTube video URL
               </label>
 
               {/* URL input with YouTube icon */}
-              <div className="relative" style={{ marginBottom: 10 }}>
+              <div className="relative" style={{ marginBottom: 12 }}>
                 {/* YouTube icon */}
                 <span
                   className="absolute flex items-center pointer-events-none"
@@ -193,14 +200,14 @@ export default function HeroSection({
                       right: 12,
                       top: "50%",
                       transform: "translateY(-50%)",
-                      color: "#9ca3af",
+                      color: "#94a3b8",
                       background: "none",
                       border: "none",
                       cursor: "pointer",
                       padding: 4,
                     }}
-                    onMouseEnter={e => (e.currentTarget.style.color = "#374151")}
-                    onMouseLeave={e => (e.currentTarget.style.color = "#9ca3af")}
+                    onMouseEnter={e => (e.currentTarget.style.color = "#ffffff")}
+                    onMouseLeave={e => (e.currentTarget.style.color = "#94a3b8")}
                   >
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                       <line x1="18" y1="6" x2="6" y2="18" />
@@ -225,34 +232,34 @@ export default function HeroSection({
                   aria-describedby={error ? "url-error" : undefined}
                   style={{
                     width: "100%",
-                    height: 48,
+                    height: 50,
                     paddingLeft: 44,
                     paddingRight: url ? 38 : 14,
                     paddingTop: 0,
                     paddingBottom: 0,
                     fontSize: "0.9375rem",
-                    color: "#111827",
-                    background: error ? "#fef2f2" : "#ffffff",
-                    border: `1.5px solid ${error ? "#fca5a5" : "#d1d5db"}`,
-                    borderRadius: 10,
+                    color: "#ffffff",
+                    background: error ? "rgba(239, 68, 68, 0.15)" : "#080c1e",
+                    border: `1.5px solid ${error ? "#f87171" : "rgba(255, 255, 255, 0.15)"}`,
+                    borderRadius: 12,
                     outline: "none",
-                    fontFamily: "'Inter', sans-serif",
+                    fontFamily: "'Nunito', sans-serif",
                     transition: "border-color 0.15s, box-shadow 0.15s",
                   }}
                   onFocus={e => {
-                    e.currentTarget.style.borderColor = "#4f46e5";
-                    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(79,70,229,0.12)";
+                    e.currentTarget.style.borderColor = "#5c52ff";
+                    e.currentTarget.style.boxShadow = "0 0 0 3px rgba(92, 82, 255, 0.25)";
                   }}
                   onBlur={e => {
-                    e.currentTarget.style.borderColor = error ? "#fca5a5" : "#d1d5db";
+                    e.currentTarget.style.borderColor = error ? "#f87171" : "rgba(255, 255, 255, 0.15)";
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 />
               </div>
 
               {/* Verified sample pills */}
-              <div className="flex flex-wrap items-center gap-1.5" style={{ marginBottom: 16 }}>
-                <span style={{ fontSize: "0.75rem", color: "#6b7280", fontWeight: 500 }}>
+              <div className="flex flex-wrap items-center gap-1.5" style={{ marginBottom: 18 }}>
+                <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 600 }}>
                   Try verified sample:
                 </span>
                 {[
@@ -268,17 +275,26 @@ export default function HeroSection({
                       setError("");
                       inputRef.current?.focus();
                     }}
-                    className="inline-flex items-center text-xs font-medium rounded-full transition-colors"
+                    className="inline-flex items-center text-xs font-semibold rounded-full transition-colors"
                     style={{
-                      background: "#f5f3ff",
-                      color: "#4f46e5",
-                      border: "1px solid #ddd6fe",
-                      padding: "2px 9px",
+                      background: "rgba(92, 82, 255, 0.12)",
+                      color: "#c7d2fe",
+                      border: "1px solid rgba(92, 82, 255, 0.3)",
+                      padding: "3px 11px",
                       cursor: "pointer",
-                      fontSize: "0.6875rem",
+                      fontSize: "0.72rem",
+                      fontFamily: "'Sometype Mono', monospace",
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#ede9fe")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "#f5f3ff")}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "rgba(92, 82, 255, 0.28)";
+                      e.currentTarget.style.color = "#ffffff";
+                      e.currentTarget.style.borderColor = "#5c52ff";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(92, 82, 255, 0.12)";
+                      e.currentTarget.style.color = "#c7d2fe";
+                      e.currentTarget.style.borderColor = "rgba(92, 82, 255, 0.3)";
+                    }}
                   >
                     {sample.label}
                   </button>
@@ -286,11 +302,11 @@ export default function HeroSection({
               </div>
             </>
           ) : (
-            <div style={{ marginBottom: 16 }}>
+            <div style={{ marginBottom: 18 }}>
               <label
                 htmlFor="manual-transcript-input"
                 className="block text-sm font-semibold"
-                style={{ color: "#374151", marginBottom: 8 }}
+                style={{ color: "#e2e8f0", marginBottom: 8 }}
               >
                 Study Notes, Article, or Audio Transcript
               </label>
@@ -308,12 +324,12 @@ export default function HeroSection({
                   width: "100%",
                   padding: "12px 14px",
                   fontSize: "0.875rem",
-                  color: "#111827",
-                  background: error ? "#fef2f2" : "#ffffff",
-                  border: `1.5px solid ${error ? "#fca5a5" : "#d1d5db"}`,
-                  borderRadius: 10,
+                  color: "#ffffff",
+                  background: error ? "rgba(239, 68, 68, 0.15)" : "#080c1e",
+                  border: `1.5px solid ${error ? "#f87171" : "rgba(255, 255, 255, 0.15)"}`,
+                  borderRadius: 12,
                   outline: "none",
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Nunito', sans-serif",
                   resize: "vertical",
                   lineHeight: 1.5,
                   marginBottom: 10,
@@ -322,8 +338,8 @@ export default function HeroSection({
               <div>
                 <label
                   htmlFor="optional-video-url"
-                  className="block text-xs font-medium"
-                  style={{ color: "#6b7280", marginBottom: 4 }}
+                  className="block text-xs font-semibold"
+                  style={{ color: "#94a3b8", marginBottom: 4 }}
                 >
                   Optional YouTube URL (to keep embedded player synced in Studio):
                 </label>
@@ -336,13 +352,15 @@ export default function HeroSection({
                   disabled={isLoading}
                   style={{
                     width: "100%",
-                    height: 38,
+                    height: 40,
                     padding: "0 12px",
                     fontSize: "0.8125rem",
-                    color: "#111827",
-                    border: "1px solid #d1d5db",
-                    borderRadius: 8,
+                    color: "#ffffff",
+                    background: "#080c1e",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    borderRadius: 10,
                     outline: "none",
+                    fontFamily: "'Nunito', sans-serif",
                   }}
                 />
               </div>
@@ -350,12 +368,12 @@ export default function HeroSection({
           )}
 
           {/* ── Study Mode Selector ── */}
-          <div style={{ marginBottom: 16 }}>
-            <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
-              <label className="block text-sm font-semibold" style={{ color: "#374151" }}>
+          <div style={{ marginBottom: 22 }}>
+            <div className="flex items-center justify-between" style={{ marginBottom: 10 }}>
+              <label className="block text-sm font-bold" style={{ color: "#ffffff" }}>
                 Study Mode
               </label>
-              <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>
+              <span className="font-mono-accent text-xs font-semibold" style={{ color: "#a5b4fc" }}>
                 {mode === "basic" ? "⚡ Quick Revision (5–10 cards)" : "🧠 Deep Mastery (Dynamic, up to 40 cards)"}
               </span>
             </div>
@@ -373,13 +391,13 @@ export default function HeroSection({
                 tabIndex={isLoading ? -1 : 0}
                 onClick={() => { if (!isLoading) setMode("basic"); }}
                 onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !isLoading) setMode("basic"); }}
-                className="flex flex-col justify-between rounded-xl transition-all"
+                className="flex flex-col justify-between rounded-2xl transition-all"
                 style={{
-                  padding: "14px 16px",
+                  padding: "16px",
                   cursor: isLoading ? "not-allowed" : "pointer",
-                  background: mode === "basic" ? "#f5f3ff" : "#ffffff",
-                  border: `2px solid ${mode === "basic" ? "#4f46e5" : "#e5e7eb"}`,
-                  boxShadow: mode === "basic" ? "0 0 0 1px #4f46e5, 0 2px 8px rgba(79,70,229,0.12)" : "none",
+                  background: mode === "basic" ? "rgba(92, 82, 255, 0.16)" : "rgba(8, 12, 30, 0.65)",
+                  border: `2px solid ${mode === "basic" ? "#5c52ff" : "rgba(255, 255, 255, 0.08)"}`,
+                  boxShadow: mode === "basic" ? "0 0 25px rgba(92, 82, 255, 0.25)" : "none",
                   opacity: isLoading ? 0.7 : 1,
                   userSelect: "none",
                 }}
@@ -387,15 +405,15 @@ export default function HeroSection({
                 <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
                   <div className="flex items-center gap-2">
                     <span style={{ fontSize: "1.1rem" }}>⚡</span>
-                    <span className="font-bold text-sm" style={{ color: mode === "basic" ? "#312e81" : "#111827" }}>
+                    <span className="font-semibold text-sm" style={{ fontFamily: "'Unbounded', sans-serif", color: "#ffffff", fontSize: "0.85rem" }}>
                       Basic Study
                     </span>
                     <span
-                      className="text-xs font-semibold rounded-full"
+                      className="text-xs font-bold rounded-full font-mono-accent"
                       style={{
-                        background: mode === "basic" ? "#e0e7ff" : "#f3f4f6",
-                        color: mode === "basic" ? "#4338ca" : "#6b7280",
-                        padding: "1px 8px",
+                        background: mode === "basic" ? "rgba(92, 82, 255, 0.35)" : "rgba(255, 255, 255, 0.08)",
+                        color: mode === "basic" ? "#c7d2fe" : "#94a3b8",
+                        padding: "2px 8px",
                         fontSize: "0.6875rem",
                       }}
                     >
@@ -407,8 +425,8 @@ export default function HeroSection({
                       width: 18,
                       height: 18,
                       borderRadius: "50%",
-                      border: `2px solid ${mode === "basic" ? "#4f46e5" : "#d1d5db"}`,
-                      background: mode === "basic" ? "#4f46e5" : "#ffffff",
+                      border: `2px solid ${mode === "basic" ? "#5c52ff" : "rgba(255, 255, 255, 0.3)"}`,
+                      background: mode === "basic" ? "#5c52ff" : "transparent",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -420,7 +438,7 @@ export default function HeroSection({
                     )}
                   </div>
                 </div>
-                <p style={{ fontSize: "0.8125rem", color: "#6b7280", lineHeight: 1.4 }}>
+                <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.45 }}>
                   Generates 5–10 concise cards focusing on the most essential concepts for rapid review.
                 </p>
               </div>
@@ -433,13 +451,13 @@ export default function HeroSection({
                 tabIndex={isLoading ? -1 : 0}
                 onClick={() => { if (!isLoading) setMode("intensive"); }}
                 onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !isLoading) setMode("intensive"); }}
-                className="flex flex-col justify-between rounded-xl transition-all"
+                className="flex flex-col justify-between rounded-2xl transition-all"
                 style={{
-                  padding: "14px 16px",
+                  padding: "16px",
                   cursor: isLoading ? "not-allowed" : "pointer",
-                  background: mode === "intensive" ? "#f5f3ff" : "#ffffff",
-                  border: `2px solid ${mode === "intensive" ? "#4f46e5" : "#e5e7eb"}`,
-                  boxShadow: mode === "intensive" ? "0 0 0 1px #4f46e5, 0 2px 8px rgba(79,70,229,0.12)" : "none",
+                  background: mode === "intensive" ? "rgba(92, 82, 255, 0.16)" : "rgba(8, 12, 30, 0.65)",
+                  border: `2px solid ${mode === "intensive" ? "#5c52ff" : "rgba(255, 255, 255, 0.08)"}`,
+                  boxShadow: mode === "intensive" ? "0 0 25px rgba(92, 82, 255, 0.25)" : "none",
                   opacity: isLoading ? 0.7 : 1,
                   userSelect: "none",
                 }}
@@ -447,15 +465,15 @@ export default function HeroSection({
                 <div className="flex items-center justify-between" style={{ marginBottom: 6 }}>
                   <div className="flex items-center gap-2">
                     <span style={{ fontSize: "1.1rem" }}>🧠</span>
-                    <span className="font-bold text-sm" style={{ color: mode === "intensive" ? "#312e81" : "#111827" }}>
+                    <span className="font-semibold text-sm" style={{ fontFamily: "'Unbounded', sans-serif", color: "#ffffff", fontSize: "0.85rem" }}>
                       Intensive Study
                     </span>
                     <span
-                      className="text-xs font-semibold rounded-full"
+                      className="text-xs font-bold rounded-full font-mono-accent"
                       style={{
-                        background: mode === "intensive" ? "#e0e7ff" : "#f3f4f6",
-                        color: mode === "intensive" ? "#4338ca" : "#6b7280",
-                        padding: "1px 8px",
+                        background: mode === "intensive" ? "rgba(92, 82, 255, 0.35)" : "rgba(255, 255, 255, 0.08)",
+                        color: mode === "intensive" ? "#c7d2fe" : "#94a3b8",
+                        padding: "2px 8px",
                         fontSize: "0.6875rem",
                       }}
                     >
@@ -467,8 +485,8 @@ export default function HeroSection({
                       width: 18,
                       height: 18,
                       borderRadius: "50%",
-                      border: `2px solid ${mode === "intensive" ? "#4f46e5" : "#d1d5db"}`,
-                      background: mode === "intensive" ? "#4f46e5" : "#ffffff",
+                      border: `2px solid ${mode === "intensive" ? "#5c52ff" : "rgba(255, 255, 255, 0.3)"}`,
+                      background: mode === "intensive" ? "#5c52ff" : "transparent",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -480,7 +498,7 @@ export default function HeroSection({
                     )}
                   </div>
                 </div>
-                <p style={{ fontSize: "0.8125rem", color: "#6b7280", lineHeight: 1.4 }}>
+                <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.45 }}>
                   Comprehensive breakdown of topics, subtopics, comparisons & scenarios (dynamic up to 40 cards).
                 </p>
               </div>
@@ -494,18 +512,28 @@ export default function HeroSection({
             onClick={onGenerate}
             disabled={isLoading}
             aria-label="Generate flashcards from this YouTube video"
-            className="flex items-center justify-center gap-2 font-semibold text-white transition-all rounded-xl w-full"
+            className="flex items-center justify-center gap-2 font-bold text-white transition-all rounded-full w-full"
             style={{
-              background: isLoading ? "#818cf8" : "#4f46e5",
-              height: 48,
+              background: isLoading ? "#4f46e5" : "linear-gradient(135deg, #5c52ff 0%, #4338ca 100%)",
+              height: 52,
               padding: "0 24px",
-              fontSize: "0.9375rem",
+              fontSize: "0.95rem",
               border: "none",
               cursor: isLoading ? "not-allowed" : "pointer",
-              boxShadow: isLoading ? "none" : "0 2px 8px rgba(79,70,229,0.25)",
+              boxShadow: isLoading ? "none" : "0 0 25px rgba(92, 82, 255, 0.45)",
             }}
-            onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.background = "#4338ca"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(79,70,229,0.35)"; } }}
-            onMouseLeave={e => { if (!isLoading) { e.currentTarget.style.background = "#4f46e5"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(79,70,229,0.25)"; } }}
+            onMouseEnter={e => {
+              if (!isLoading) {
+                e.currentTarget.style.filter = "brightness(1.15)";
+                e.currentTarget.style.boxShadow = "0 0 32px rgba(92, 82, 255, 0.65)";
+              }
+            }}
+            onMouseLeave={e => {
+              if (!isLoading) {
+                e.currentTarget.style.filter = "none";
+                e.currentTarget.style.boxShadow = "0 0 25px rgba(92, 82, 255, 0.45)";
+              }
+            }}
           >
             {isLoading ? (
               <>
@@ -526,7 +554,7 @@ export default function HeroSection({
 
           {/* Hint text (idle) */}
           {status === "idle" && (
-            <p style={{ fontSize: "0.8125rem", color: "#9ca3af", marginTop: 10, textAlign: "center" }}>
+            <p style={{ fontSize: "0.8125rem", color: "#64748b", marginTop: 12, textAlign: "center" }}>
               Works with youtube.com and youtu.be links · No account needed
             </p>
           )}
@@ -535,14 +563,14 @@ export default function HeroSection({
           {status === "loading" && (
             <div
               role="status"
-              className="fade-up flex items-center gap-2.5 rounded-lg"
+              className="fade-up flex items-center gap-2.5 rounded-xl"
               style={{
-                background: "#eef2ff",
-                border: "1px solid #c7d2fe",
-                color: "#3730a3",
-                padding: "10px 14px",
+                background: "rgba(92, 82, 255, 0.15)",
+                border: "1px solid rgba(92, 82, 255, 0.35)",
+                color: "#c7d2fe",
+                padding: "12px 16px",
                 fontSize: "0.875rem",
-                marginTop: 12,
+                marginTop: 14,
               }}
             >
               <svg className="spin-icon shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -560,18 +588,18 @@ export default function HeroSection({
           {status === "success" && (
             <div
               role="status"
-              className="fade-up flex items-center justify-between rounded-lg"
+              className="fade-up flex items-center justify-between rounded-xl"
               style={{
-                background: "#ecfdf5",
-                border: "1px solid #a7f3d0",
-                color: "#065f46",
-                padding: "10px 14px",
+                background: "rgba(16, 185, 129, 0.15)",
+                border: "1px solid rgba(16, 185, 129, 0.35)",
+                color: "#6ee7b7",
+                padding: "12px 16px",
                 fontSize: "0.875rem",
-                marginTop: 12,
+                marginTop: 14,
               }}
             >
               <div className="flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                   <polyline points="22 4 12 14.01 9 11.01" />
                 </svg>
@@ -589,7 +617,7 @@ export default function HeroSection({
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "#047857",
+                  color: "#a7f3d0",
                   padding: "4px 8px",
                 }}
               >
@@ -603,14 +631,14 @@ export default function HeroSection({
             <div
               id="url-error"
               role="alert"
-              className="fade-up flex flex-col gap-2 rounded-lg"
+              className="fade-up flex flex-col gap-2 rounded-xl"
               style={{
-                background: "#fef2f2",
-                border: "1px solid #fecaca",
-                color: "#dc2626",
-                padding: "12px 14px",
+                background: "rgba(239, 68, 68, 0.15)",
+                border: "1px solid rgba(239, 68, 68, 0.35)",
+                color: "#fca5a5",
+                padding: "12px 16px",
                 fontSize: "0.875rem",
-                marginTop: 12,
+                marginTop: 14,
               }}
             >
               <div className="flex items-start gap-2">
@@ -630,15 +658,15 @@ export default function HeroSection({
                   }}
                   className="inline-flex items-center gap-1.5 font-semibold text-xs rounded transition-colors self-start"
                   style={{
-                    background: "#fee2e2",
-                    color: "#991b1b",
+                    background: "rgba(239, 68, 68, 0.25)",
+                    color: "#fecaca",
                     padding: "4px 10px",
-                    border: "1px solid #fca5a5",
+                    border: "1px solid rgba(239, 68, 68, 0.4)",
                     cursor: "pointer",
                     marginLeft: 24,
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#fecaca")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "#fee2e2")}
+                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(239, 68, 68, 0.35)")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "rgba(239, 68, 68, 0.25)")}
                 >
                   <span>📝</span> Switch to Paste Notes / Transcript manually →
                 </button>
@@ -650,7 +678,7 @@ export default function HeroSection({
         {/* Trust strip */}
         <div
           className="flex flex-wrap items-center justify-center"
-          style={{ gap: "8px 20px", marginTop: 20 }}
+          style={{ gap: "8px 20px", marginTop: 24 }}
         >
           {[
             { icon: "🔒", text: "No signup required" },
@@ -660,7 +688,7 @@ export default function HeroSection({
             <span
               key={text}
               className="flex items-center gap-1.5"
-              style={{ fontSize: "0.8125rem", color: "#9ca3af" }}
+              style={{ fontSize: "0.8125rem", color: "#64748b" }}
             >
               <span style={{ fontSize: "0.75rem" }}>{icon}</span>
               {text}
