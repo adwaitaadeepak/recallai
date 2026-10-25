@@ -7,10 +7,6 @@ import type { StudyMode } from "@/app/api/generate/route";
 interface HeroSectionProps {
   url: string;
   setUrl: Dispatch<SetStateAction<string>>;
-  manualTranscript: string;
-  setManualTranscript: Dispatch<SetStateAction<string>>;
-  inputTab: "url" | "notes";
-  setInputTab: Dispatch<SetStateAction<"url" | "notes">>;
   error: string;
   setError: Dispatch<SetStateAction<string>>;
   isLoading: boolean;
@@ -25,10 +21,6 @@ interface HeroSectionProps {
 export default function HeroSection({
   url,
   setUrl,
-  manualTranscript,
-  setManualTranscript,
-  inputTab,
-  setInputTab,
   error,
   setError,
   isLoading,
@@ -124,48 +116,7 @@ export default function HeroSection({
             padding: 30,
           }}
         >
-          {/* Source Mode Tabs */}
-          <div
-            className="flex items-center rounded-xl p-1.5"
-            style={{
-              background: "rgba(8, 12, 30, 0.8)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-              marginBottom: 20,
-              gap: 6,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => { setInputTab("url"); setError(""); }}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-bold transition-all"
-              style={{
-                background: inputTab === "url" ? "rgba(92, 82, 255, 0.28)" : "transparent",
-                color: inputTab === "url" ? "#ffffff" : "#94a3b8",
-                border: inputTab === "url" ? "1px solid rgba(92, 82, 255, 0.45)" : "1px solid transparent",
-                boxShadow: inputTab === "url" ? "0 0 16px rgba(92, 82, 255, 0.3)" : "none",
-                cursor: "pointer",
-              }}
-            >
-              <span>📺</span> YouTube URL
-            </button>
-            <button
-              type="button"
-              onClick={() => { setInputTab("notes"); setError(""); }}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg text-xs font-bold transition-all"
-              style={{
-                background: inputTab === "notes" ? "rgba(92, 82, 255, 0.28)" : "transparent",
-                color: inputTab === "notes" ? "#ffffff" : "#94a3b8",
-                border: inputTab === "notes" ? "1px solid rgba(92, 82, 255, 0.45)" : "1px solid transparent",
-                boxShadow: inputTab === "notes" ? "0 0 16px rgba(92, 82, 255, 0.3)" : "none",
-                cursor: "pointer",
-              }}
-            >
-              <span>📝</span> Paste Notes / Transcript
-            </button>
-          </div>
 
-          {inputTab === "url" ? (
-            <>
               {/* Input label */}
               <label
                 htmlFor="youtube-url-input"
@@ -256,72 +207,6 @@ export default function HeroSection({
                   }}
                 />
               </div>
-            </>
-          ) : (
-            <div style={{ marginBottom: 18 }}>
-              <label
-                htmlFor="manual-transcript-input"
-                className="block text-sm font-semibold"
-                style={{ color: "#e2e8f0", marginBottom: 8 }}
-              >
-                Study Notes, Article, or Audio Transcript
-              </label>
-              <textarea
-                id="manual-transcript-input"
-                rows={5}
-                value={manualTranscript}
-                onChange={(e) => {
-                  setManualTranscript(e.target.value);
-                  if (error) setError("");
-                }}
-                disabled={isLoading}
-                placeholder="Paste speech transcript, lecture notes, textbook excerpt, or article text here..."
-                style={{
-                  width: "100%",
-                  padding: "12px 14px",
-                  fontSize: "0.875rem",
-                  color: "#ffffff",
-                  background: error ? "rgba(239, 68, 68, 0.15)" : "#080c1e",
-                  border: `1.5px solid ${error ? "#f87171" : "rgba(255, 255, 255, 0.15)"}`,
-                  borderRadius: 12,
-                  outline: "none",
-                  fontFamily: "'Nunito', sans-serif",
-                  resize: "vertical",
-                  lineHeight: 1.5,
-                  marginBottom: 10,
-                }}
-              />
-              <div>
-                <label
-                  htmlFor="optional-video-url"
-                  className="block text-xs font-semibold"
-                  style={{ color: "#94a3b8", marginBottom: 4 }}
-                >
-                  Optional YouTube URL (to keep embedded player synced in Studio):
-                </label>
-                <input
-                  id="optional-video-url"
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://www.youtube.com/watch?v=… (optional)"
-                  disabled={isLoading}
-                  style={{
-                    width: "100%",
-                    height: 40,
-                    padding: "0 12px",
-                    fontSize: "0.8125rem",
-                    color: "#ffffff",
-                    background: "#080c1e",
-                    border: "1px solid rgba(255, 255, 255, 0.15)",
-                    borderRadius: 10,
-                    outline: "none",
-                    fontFamily: "'Nunito', sans-serif",
-                  }}
-                />
-              </div>
-            </div>
-          )}
 
           {/* ── Study Mode Selector ── */}
           <div style={{ marginBottom: 22 }}>
@@ -599,28 +484,6 @@ export default function HeroSection({
                 </svg>
                 <span>{error}</span>
               </div>
-              {inputTab === "url" && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setInputTab("notes");
-                    setError("");
-                  }}
-                  className="inline-flex items-center gap-1.5 font-semibold text-xs rounded transition-colors self-start"
-                  style={{
-                    background: "rgba(239, 68, 68, 0.25)",
-                    color: "#fecaca",
-                    padding: "4px 10px",
-                    border: "1px solid rgba(239, 68, 68, 0.4)",
-                    cursor: "pointer",
-                    marginLeft: 24,
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(239, 68, 68, 0.35)")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "rgba(239, 68, 68, 0.25)")}
-                >
-                  <span>📝</span> Switch to Paste Notes / Transcript manually →
-                </button>
-              )}
             </div>
           )}
         </div>

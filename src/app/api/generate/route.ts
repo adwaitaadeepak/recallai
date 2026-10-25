@@ -14,28 +14,24 @@ export interface Flashcard {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { url, manualTranscript } = body;
+    const { url } = body;
     const mode: StudyMode = body.mode === "intensive" ? "intensive" : "basic";
 
     let timestampedTranscript = "";
     let videoId: string | null = null;
 
-    if (manualTranscript && typeof manualTranscript === "string" && manualTranscript.trim().length >= 30) {
-      timestampedTranscript = manualTranscript.trim();
-      videoId = url ? extractVideoId(url) : null;
-    } else {
-      if (!url || typeof url !== "string") {
-        return Response.json({ error: "Missing or invalid URL." }, { status: 400 });
-      }
+    if (!url || typeof url !== "string") {
+      return Response.json({ error: "Missing or invalid URL." }, { status: 400 });
+    }
 
-      // ── Extract video ID ──────────────────────────────────────────────────────
-      videoId = extractVideoId(url);
-      if (!videoId) {
-        return Response.json({ error: "Could not extract a video ID from the provided URL." }, { status: 400 });
-      }
+    // ── Extract video ID ──────────────────────────────────────────────────────
+    videoId = extractVideoId(url);
+    if (!videoId) {
+      return Response.json({ error: "Could not extract a video ID from the provided URL." }, { status: 400 });
+    }
 
-      // ── Fetch transcript ──────────────────────────────────────────────────────
-      let transcriptChunks: { text: string; offset: number; duration?: number }[] | null = null;
+    // ── Fetch transcript ──────────────────────────────────────────────────────
+    let transcriptChunks: { text: string; offset: number; duration?: number }[] | null = null;
 
       // 1. Try Supadata API first with mode=auto (native captions first, automatic AI Whisper audio fallback if captions missing)
       const supadataKey = process.env.SUPADATA_API_KEY;
@@ -100,7 +96,7 @@ export async function POST(request: Request) {
           return Response.json(
             {
               error:
-                "Could not fetch transcript for this video. Captions may be disabled on YouTube. You can enable automatic AI Whisper audio transcription with a free SUPADATA_API_KEY, or paste notes/transcript manually below!",
+                "Could not fetch transcript for this video. Captions may be disabled on YouTube. Set a SUPADATA_API_KEY to enable automatic AI audio transcription for videos without captions.",
             },
             { status: 422 }
           );
@@ -132,7 +128,6 @@ export async function POST(request: Request) {
         }
       }
       timestampedTranscript = timestampedTranscript.trim();
-    }
 
     if (timestampedTranscript.length < 50) {
       return Response.json(
